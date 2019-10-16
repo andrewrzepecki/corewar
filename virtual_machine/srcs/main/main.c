@@ -12,9 +12,43 @@
 
 #include "virtual_machine.h"
 
+int		init_error(int error, t_vm *vm)
+{
+	// print error code
+	//if (vm != NULL)
+	//		free(vm);
+	return (1);
+}
+
+int		load_arena(t_vm *vm)
+{
+
+}
+
+int		load_players(int ac, char **av, t_vm *vm)
+{
+	int i;
+
+	i = 0;
+	while (i < ac)
+	{
+		
+	}
+}
 
 int		main(int ac, char **av)
 {
-	t_vm	vm;
+	int		err;
+	t_vm	*vm;
+
+	err = 0;
+	if (!(vm = (t_vm*)malloc(sizeof(t_vm))))
+		return (1);
+	if ((err = load_players(ac, av, vm)))
+		return (init_error(err, vm));
+	if ((err = load_arena(vm)))
+		return (init_error(err, vm));
+	execute_vm(vm);
+	free_vm(vm);
 	return (0);
 }

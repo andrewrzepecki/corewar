@@ -29,18 +29,18 @@ typedef struct			s_player
 	char				exec[CHAMP_MAX_SIZE + 1];
 }						t_player;
 
-typedef struct 			s_carriage
+typedef struct 			s_process
 {
 	int					id;
 	int					carry;  
 	int					current_op; 	/* operation a executer */
 	int					last_live;		/* cycle du dernier 'live' */
 	int					cycles_left; 	/* cycles restant avant execution */
-	int					position;   	/* position sur l'arene du cariage */
-	int					next; 			/* nombre d'octets avant prochaine operation */
+	int					pc;   	/* position sur l'arene du cariage */
+	int					next_op; 			/* nombre d'octets avant prochaine operation */
 	int					reg[REG_NUMBER];/* registres du carriage ??? unique au carriage ou commum pour chaque process */
-	struct s_carriage	*next;
-}						t_carriage;
+	struct s_process	*next;
+}						t_process;
 
 /* 
 	Apres initialisation de la vm, avec les joueurs et le code executable, a chaque cycle, lire chaque carriage dans l'ordre,
@@ -49,8 +49,10 @@ typedef struct 			s_carriage
 
 typedef	struct			s_vm
 {
+	int					dump;
+	int					nb_players;
 	t_player			player[MAX_PLAYERS];
-	t_carriage      	*carriage;
+	t_process     		*process;
 	t_player			*last_live; 	/* addresse du joueur ayant appele 'live' en dernier */
 	int					cycles;
 	int					nb_lives;  		/* nombre de 'live' durant chaque cycle_to_die */
