@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/10/04 11:43:01 by zaz               #+#    #+#             */
-/*   Updated: 2019/10/15 21:40:00 by eviana           ###   ########.fr       */
+/*   Updated: 2019/10/16 13:34:57 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,30 +39,19 @@ t_op    op_tab[17] =
 	{0, 0, {0}, 0, 0, 0, 0, 0}
 };
 
-int			read_address(t_vm *vm, int address)
+int			rel_address(t_vm *vm, int proc_id, int add1, int add2)
 {
-	int		res;
-	size_t	bytes;
-
-	bytes = 4;
-	while (bytes)
-	{
-		res = vm->mem[address] * ft_power(256, bytes - 1);
-		address = (address + 1) % MEM_SIZE;
-		bytes--;
-	}
-	return (res);
+	return ((vm->proc[proc_id]->pc + ((add1 + add2) % IDX_MOD)) % MEM_SIZE);
 }
 
-int			read_bytes(t_vm *vm, int proc_id, size_t bytes)
+int			read_address(t_vm *vm, int pc, size_t bytes)
 {
 	int		res;
 
-	res = 0;
 	while (bytes)
 	{
-		res = vm->mem[vm->proc[proc_id].pc] * ft_power(256, bytes - 1);
-		move_pc(vm, proc_id, 1);
+		res = vm->mem[pc] * ft_power(256, bytes - 1);
+		pc = (pc + 1) % MEM_SIZE;
 		bytes--;
 	}
 	return (res);
@@ -92,58 +81,93 @@ int			get_code(char ocp)
 		return (0);
 }
 
-int			get_param(t_vm *vm, int proc_id, int code)
+int			get_param(t_vm *vm, int pc, int code, int dir_size)
 {
 	if (code == REG_CODE)
-		return (vm->reg[read_bytes(vm, proc_id, 1)]);
+		return (vm->reg[read_address(vm, pc, 1)]);
 	else if (code == DIR_CODE)
-		return (read_bytes(vm, proc_id, 2));
+		return (read_address(vm, pc, dir_size));
 	else if (code == IND_CODE)
-		return (read_address(vm, read_bytes(vm, proc_id, 2)));
+		return (read_address(vm, read_address(vm, pc, 2), 4)); // attention, cela doit etre lu par rapport au pc initial et dépend de l'addressage restreint
 	return (0);
 }
 
-t_params	set_params(t_vm *vm, int proc_id)
+int			param_size(int code, int dir_size)
+{
+	if (code == REG_CODE)
+		return (1);
+	else if (code == DIR_CODE)
+		return (dir_size);
+	else if (code == IND_CODE)
+		return (2);
+	return (0);
+}
+
+t_params	set_params(t_vm *vm, int pc, int *count, int dir_size)
 {
 	int			i;
+	int			code;
 	char		ocp;
 	t_params 	params;
 
 	i = 0;
-	ocp = vm->mem[vm->proc[proc_id].pc];
+	ocp = vm->mem[(pc + 1) % MEM_SIZE];
+	pc = (pc + 2) % MEM_SIZE;
+	*count = 2; // 1 + 1 : on passera l'opcode puis l'ocp
 	check_ocp(ocp); // Faire une action si nul : perror ?
-	move_pc(vm, proc_id, 1);
 	while (i < 3)
 	{
 		ocp = ocp >> 2;
-		params.n[i] = get_param(vm, proc_id, get_code(ocp));
+		code = get_code(ocp);
+		params.n[i] = get_param(vm, pc, code, dir_size);
+		pc = (pc + param_size(code, dir_size)) % MEM_SIZE;
+		*count = *count + param_size(code, dir_size);
 		i++;
 	}
 	return (params);
 }
 
-int		zjmp(t_vm *vm, int proc_id)
+int		zjmp(t_vm *vm, int pc)
 {
 	//vm->time += 20; // Comment traiter la durée ?
 	//move_pc(vm, proc_id, 1);
 	if (vm->carry)
-		move_pc(vm, proc_id, read_bytes(vm, proc_id, 2));
+		return (read_address(vm, (pc + 1) % MEM_SIZE, 2)); // En sortie il faudra appliquer le % MEM_SIZE, on peut le faire en utilisant move_pc
 	else
-		move_pc(vm, proc_id, 2);
-	return (0); // On est déjà où on le souhaite
+		return (3); // 1 + 2 : on passe l'opcode, puis on passe le D2
 }
 
 /*
-**	Ne pas oublier de move_pc(vm, proc_id, 1) avant chaque fonction
+**	Ne pas oublier de move_pc(vm, proc_id, 1) avant chaque fonction ==> NON
+**  pour passer l'opcode et se retrouver soit sur l'ocp soit sur le 1er argument
+**	Rajouter l'adressage restreint
 */
 
-int			ldi(t_vm *vm, int proc_id)
+int			ldi(t_vm *vm, int pc)
 {
 	t_params	params;
+	int			count; // Nous permet de savoir de combien de case avancer jusqu'a la fin de l'instruction
 	
 	//vm->time += 25; // Comment traiter la durée ?
 	//move_pc(vm, proc_id, 1);
+	params = set_params(vm, pc, &count, 2);
+	vm->reg[params.n[2]] = read_address(vm, rel_address(vm, proc_id, params.n[0], params.n[1]));
+	if (vm->reg[params.n[2]] == 0)
+		vm->carry = 1;
+	else
+		vm->carry = 0;
+	return (count);
+}
+
+int			sti(t_vm *vm, int proc_id)
+{
+	t_params	params;
+
 	params = set_params(vm, proc_id);
-	vm->reg[params.n[2]] = read_address(vm, params.n[0] + params.n[1]);
-	return (1); // On doit encore décaler de 1;
+	vm->mem[rel_address(vm, proc_id, params.n[1], params.n[2])] = vm->reg[params.n[0]];
+	if (vm->reg[params.n[0]] == 0)
+		vm->carry = 1;
+	else
+		vm->carry = 0;
+	return (0);
 }
