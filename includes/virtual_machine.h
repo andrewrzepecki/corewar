@@ -16,6 +16,21 @@
 # include "libft.h"
 # include "op.h"
 
+/* 
+** ERROR CODES
+*/
+
+# define OH_OUI					0
+# define OPTION_ERROR 			1
+# define PLAYER_NUMBER_ERROR 	2
+# define DUMP_ERROR				3
+# define FILE_ERROR				4
+# define PLAYER_OVERLOAD		5
+# define NAME_ERROR				7
+# define COMMENT_ERROR			8
+# define EXEC_ERROR				9
+# define MAGIC_ERROR			10
+
 /*
 Structures basees sur le cookcook du russe/Ukrainien 
 */
@@ -50,6 +65,7 @@ typedef struct 			s_process
 typedef	struct			s_vm
 {
 	int					dump;
+	int					nb_args;
 	int					nb_players;
 	t_player			player[MAX_PLAYERS];
 	t_process     		*process;
@@ -59,6 +75,12 @@ typedef	struct			s_vm
 	int					cycles_to_die;  /* = CYCLES_TO_DIE || cycles avant ??verifications?? */
 	int					nb_checks; 		/* ?? */
 }						t_vm;
+
+/*
+	Parsing tools
+*/
+int		parse_options(t_vm *vm, char **av, int *i);
+int		parse_player(t_vm *vm, char **av, int *i);
 
 /*
 Operations

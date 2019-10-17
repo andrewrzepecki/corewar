@@ -28,12 +28,20 @@ int		load_arena(t_vm *vm)
 int		load_players(int ac, char **av, t_vm *vm)
 {
 	int i;
+	int	err;
 
 	i = 0;
-	while (i < ac)
+	while (++i < ac)
 	{
-		
+		if (av[i] && av[i][0] == '-')
+		{
+			if (parse_option(vm, av, &i))
+				return (OPTION_ERROR);
+		}
+		else if ((err = parse_player(vm, av, &i)))
+			return (err);
 	}
+	return (check_arguments(vm));
 }
 
 int		main(int ac, char **av)
