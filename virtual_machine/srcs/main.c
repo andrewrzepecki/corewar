@@ -76,6 +76,7 @@ int		main(int ac, char **av)
 	//if ((err = load_arena(vm)))
 	//	return (init_error(err, vm));
 	//execute_vm(vm);
+	ft_printf("%s || %s || %s\n", vm->player[0].name, vm->player[0].comment, vm->player[0].exec);
 	free(vm);
 	return (0);
 }

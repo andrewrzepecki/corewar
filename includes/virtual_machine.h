@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef VIRUAL_MACHINE_H
+#ifndef VIRTUAL_MACHINE_H
 # define VIRTUAL_MACHINE_H
 
 # include "libft.h"
@@ -79,8 +79,13 @@ typedef	struct			s_vm
 /*
 	Parsing tools
 */
-int		parse_options(t_vm *vm, char **av, int *i);
-int		parse_player(t_vm *vm, char **av, int *i);
+int		parse_option(t_vm *vm, char **av, int *i);
+int		parse_player(t_vm *vm, char **av, int i);
+
+/*
+	Error management
+*/
+int		init_error(int error, t_vm *vm);
 
 /*
 Operations

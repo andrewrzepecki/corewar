@@ -6,7 +6,7 @@
 #    By: anrzepec <anrzepec@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/09/17 19:12:20 by anrzepec          #+#    #+#              #
-#    Updated: 2019/05/02 14:12:47 by anrzepec         ###   ########.fr        #
+#    Updated: 2019/10/17 12:31:26 by andrewrze        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,6 +22,7 @@ SRC 	= ft_printf/ft_printf.c \
 		  ft_printf/ft_struct_settings.c \
 		  ft_printf/ft_tools.c \
 		  ft_printf/ft_precision.c \
+		  ft_power.c \
 		  autocomplete_word.c \
 		  ft_floor.c \
 		  ft_ftoa.c \

@@ -14,7 +14,7 @@
 
 int     parse_magic(int fd)
 {
-    char    buff[4];
+    unsigned char    buff[4];
     int     bytes;
     long long  res;
 
@@ -25,28 +25,28 @@ int     parse_magic(int fd)
     while (bytes < 4)
     {
         res += buff[bytes] * ft_power(256, (4 - (bytes + 1)));
-        ft_printf("byte = %d -> res = %lld\n", buff[bytes], res);
         bytes++;
     }
     if (res == COREWAR_EXEC_MAGIC)
         return (0);
-    ft_printf("magic: %lld \n", res);
     return (1);
 }
 
 int     parse_exec(int fd, t_vm *vm)
 {
-    char    buff[CHAMP_MAX_SIZE + 1];
-    int     bytes;
+    unsigned char   buff[CHAMP_MAX_SIZE + 1];
+    int             bytes;
 
     if (read(fd, buff, 4) != 4)
         return (1);
-    bytes = 4;
-    while (bytes)
+    bytes = 0;
+    while (bytes < 4)
     {
-        vm->player[vm->nb_players].size += buff[bytes - 1] * ft_power(256, (4 - bytes));
-        bytes--;
+        vm->player[vm->nb_players].size += buff[bytes] * ft_power(256, (4 - (bytes + 1)));
+        bytes++;
     }
+    if (read(fd, vm->player[vm->nb_players].comment, COMMENT_LENGTH) != COMMENT_LENGTH)
+        return (COMMENT_ERROR);
     if (vm->player[vm->nb_players].size < CHAMP_MAX_SIZE)
         if (read(fd, buff, vm->player[vm->nb_players].size)
             == vm->player[vm->nb_players].size)
@@ -64,10 +64,8 @@ int     parse_player(t_vm *vm, char **av, int i)
         return (PLAYER_OVERLOAD);
     if (parse_magic(fd))
         return (MAGIC_ERROR);
-    if (read(fd, vm->player[vm->nb_players].name, PROG_NAME_LENGTH) != PROG_NAME_LENGTH)
+    if (read(fd, vm->player[vm->nb_players].name, PROG_NAME_LENGTH + 4) != PROG_NAME_LENGTH + 4)
         return (NAME_ERROR);
-    if (read(fd, vm->player[vm->nb_players].comment, COMMENT_LENGTH) != COMMENT_LENGTH)
-        return (COMMENT_ERROR);
     if (parse_exec(fd, vm))
         return (EXEC_ERROR);
     vm->nb_players++;
