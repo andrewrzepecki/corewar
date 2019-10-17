@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/10/04 11:43:01 by zaz               #+#    #+#             */
-/*   Updated: 2019/10/16 13:34:57 by eviana           ###   ########.fr       */
+/*   Updated: 2019/10/17 15:10:43 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,21 @@ t_op    op_tab[17] =
 int			rel_address(t_vm *vm, int proc_id, int add1, int add2)
 {
 	return ((vm->proc[proc_id]->pc + ((add1 + add2) % IDX_MOD)) % MEM_SIZE);
+}
+
+int			read_bytes(unsigned char *mem, size_t size)
+{
+	int bytes;
+	int res;
+
+	bytes = 0;
+	res = 0;
+	while (bytes < size)
+	{
+		res += mem[bytes] * ft_power(256, (4 - (bytes - 1))));
+		bytes++;
+	}
+	return (res);
 }
 
 int			read_address(t_vm *vm, int pc, size_t bytes)
@@ -81,14 +96,14 @@ int			get_code(char ocp)
 		return (0);
 }
 
-int			get_param(t_vm *vm, int pc, int code, int dir_size)
+int			get_param(t_vm *vm, int pc, int current, int code, int dir_size)
 {
 	if (code == REG_CODE)
 		return (vm->reg[read_address(vm, pc, 1)]);
 	else if (code == DIR_CODE)
 		return (read_address(vm, pc, dir_size));
 	else if (code == IND_CODE)
-		return (read_address(vm, read_address(vm, pc, 2), 4)); // attention, cela doit etre lu par rapport au pc initial et dépend de l'addressage restreint
+		return (read_address(vm, (pc + (read_address(vm, current, 2) % IDX_MOD)) % MEM_SIZE, 4)); // attention, cela doit etre lu par rapport au pc initial et dépend de l'addressage restreint
 	return (0);
 }
 
@@ -112,26 +127,29 @@ t_params	set_params(t_vm *vm, int pc, int *count, int dir_size)
 
 	i = 0;
 	ocp = vm->mem[(pc + 1) % MEM_SIZE];
-	pc = (pc + 2) % MEM_SIZE;
+	//pc = (pc + 2) % MEM_SIZE;
 	*count = 2; // 1 + 1 : on passera l'opcode puis l'ocp
 	check_ocp(ocp); // Faire une action si nul : perror ?
 	while (i < 3)
 	{
 		ocp = ocp >> 2;
 		code = get_code(ocp);
-		params.n[i] = get_param(vm, pc, code, dir_size);
-		pc = (pc + param_size(code, dir_size)) % MEM_SIZE;
+		params.n[i] = get_param(vm, pc, (pc + *count) % MEM_SIZE, code, dir_size); // pc orig a envoyer en plusß
+		// pc = (pc + param_size(code, dir_size)) % MEM_SIZE;
 		*count = *count + param_size(code, dir_size);
 		i++;
 	}
 	return (params);
 }
 
-int		zjmp(t_vm *vm, int pc)
+int		zjmp(t_vm *vm, int proc_id)
 {
+	int pc;
+
+	pc = vm->proc[proc_id].pc; 
 	//vm->time += 20; // Comment traiter la durée ?
 	//move_pc(vm, proc_id, 1);
-	if (vm->carry)
+	if (vm->proc[proc_id].carry)
 		return (read_address(vm, (pc + 1) % MEM_SIZE, 2)); // En sortie il faudra appliquer le % MEM_SIZE, on peut le faire en utilisant move_pc
 	else
 		return (3); // 1 + 2 : on passe l'opcode, puis on passe le D2

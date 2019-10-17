@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_player.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: andrewrzepecki <anrzepec@student.42.f      +#+  +:+       +#+        */
+/*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 22:56:27 by andrewrze         #+#    #+#             */
-/*   Updated: 2019/10/16 22:56:31 by andrewrze        ###   ########.fr       */
+/*   Updated: 2019/10/17 16:52:15 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,44 +14,28 @@
 
 int     parse_magic(int fd)
 {
-    unsigned char    buff[4];
-    int     bytes;
-    long long  res;
+    unsigned char       buff[4];
 
     if (read(fd, &buff, 4) < 4)
         return (1);
-    bytes = 0;
-    res = 0;
-    while (bytes < 4)
-    {
-        res += buff[bytes] * ft_power(256, (4 - (bytes + 1)));
-        bytes++;
-    }
-    if (res == COREWAR_EXEC_MAGIC)
+    if (read_bytes(buff, 4) == COREWAR_EXEC_MAGIC)
         return (0);
     return (1);
 }
 
 int     parse_exec(int fd, t_vm *vm)
 {
-    unsigned char   buff[CHAMP_MAX_SIZE + 1];
-    int             bytes;
+    unsigned char   buff[4];
 
     if (read(fd, buff, 4) != 4)
         return (1);
-    bytes = 0;
-    while (bytes < 4)
-    {
-        vm->player[vm->nb_players].size += buff[bytes] * ft_power(256, (4 - (bytes + 1)));
-        bytes++;
-    }
-    if (read(fd, vm->player[vm->nb_players].comment, COMMENT_LENGTH) != COMMENT_LENGTH)
+    if ((vm->player[vm->nb_players].size = read_bytes(buff, 4)) <= 0 && vm->player[vm->nb_players].size > CHAMP_MAX_SIZE)
+        return (SIZE_ERROR);
+    if (read(fd, vm->player[vm->nb_players].comment, COMMENT_LENGTH + 4) != COMMENT_LENGTH + 4)
         return (COMMENT_ERROR);
-    if (vm->player[vm->nb_players].size < CHAMP_MAX_SIZE)
-        if (read(fd, buff, vm->player[vm->nb_players].size)
-            == vm->player[vm->nb_players].size)
-            return (0);
-    return (1);
+    if (read(fd, vm->player[vm->nb_players].exec, vm->player[vm->nb_players].size) != vm->player[vm->nb_players].size)
+        return (SIZE_ERROR);
+    return (0);
 }
 
 int     parse_player(t_vm *vm, char **av, int i)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   virtual_machine.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anrzepec <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 13:56:35 by anrzepec          #+#    #+#             */
-/*   Updated: 2019/10/16 13:56:37 by anrzepec         ###   ########.fr       */
+/*   Updated: 2019/10/17 17:12:51 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 # define COMMENT_ERROR			8
 # define EXEC_ERROR				9
 # define MAGIC_ERROR			10
+# define SIZE_ERROR				11
 
 /*
 Structures basees sur le cookcook du russe/Ukrainien 
@@ -38,10 +39,10 @@ Structures basees sur le cookcook du russe/Ukrainien
 typedef struct			s_player
 {
 	int					id;
-	char				name[PROG_NAME_LENGTH + 1];
-	char				comment[COMMENT_LENGTH + 1];
-	int					size;
-	char				exec[CHAMP_MAX_SIZE + 1];
+	char				name[PROG_NAME_LENGTH + 4];
+	char				comment[COMMENT_LENGTH + 4];
+	unsigned int		size;
+	char				exec[CHAMP_MAX_SIZE];
 }						t_player;
 
 typedef struct 			s_process
@@ -67,6 +68,7 @@ typedef	struct			s_vm
 	int					dump;
 	int					nb_args;
 	int					nb_players;
+	unsigned char		mem[MEM_SIZE];
 	t_player			player[MAX_PLAYERS];
 	t_process     		*process;
 	t_player			*last_live; 	/* addresse du joueur ayant appele 'live' en dernier */
@@ -77,18 +79,29 @@ typedef	struct			s_vm
 }						t_vm;
 
 /*
-	Parsing tools
+** Parsing tools
 */
+
 int		parse_option(t_vm *vm, char **av, int *i);
 int		parse_player(t_vm *vm, char **av, int i);
+int		read_bytes(unsigned char *mem, size_t size);
 
 /*
-	Error management
+**	Init
 */
+
+void	create_arena(t_vm *vm);
+
+/*
+** Error management
+*/
+
 int		init_error(int error, t_vm *vm);
 
 /*
-Operations
+** Operations
 */
+
+
 
 #endif

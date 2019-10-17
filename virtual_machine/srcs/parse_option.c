@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing.c                                          :+:      :+:    :+:   */
+/*   parse_option.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: andrewrzepecki <anrzepec@student.42.f      +#+  +:+       +#+        */
+/*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 21:15:46 by andrewrze         #+#    #+#             */
-/*   Updated: 2019/10/16 21:15:50 by andrewrze        ###   ########.fr       */
+/*   Updated: 2019/10/17 16:56:01 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 /* 
 ** ON GOING:    check MAX_INT for player number.
-                deal with clashing player numbers.
+**              deal with clashing player numbers.
 */
 int     number_option(t_vm *vm, char **av, int *i)
 {
@@ -45,4 +45,3 @@ int     parse_option(t_vm *vm, char **av, int *i)
         return (dump_option(vm, av, i));
     return (1);
 }
-

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anrzepec <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 16:51:00 by anrzepec          #+#    #+#             */
-/*   Updated: 2019/10/16 16:51:01 by anrzepec         ###   ########.fr       */
+/*   Updated: 2019/10/17 17:17:36 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int		load_players(char **av, t_vm *vm)
 		else if ((err = parse_player(vm, av, i)))
 			return (err);
 	}
-	return (0);
+	return (vm->nb_players > 1 ? 0 : 1);
 }
 
 void	init_players(t_vm *vm)
@@ -50,6 +50,7 @@ t_vm 	*init_vm(int ac)
 
 	if (!(vm = (t_vm*)malloc(sizeof(t_vm))))
 		return (NULL);
+	ft_bzero(vm->mem, MEM_SIZE);
 	vm->process = NULL;
 	vm->last_live = NULL;
 	vm->dump = 0;
@@ -63,6 +64,21 @@ t_vm 	*init_vm(int ac)
 	return (vm);
 }
 
+int			read_bytes(unsigned char *mem, size_t size)
+{
+	size_t bytes;
+	int res;
+
+	bytes = 0;
+	res = 0;
+	while (bytes < size)
+	{
+		res += mem[bytes] * ft_power(256, (4 - (bytes + 1)));
+		bytes++;
+	}
+	return (res);
+}
+
 int		main(int ac, char **av)
 {
 	int		err;
@@ -73,10 +89,13 @@ int		main(int ac, char **av)
 		return (1);
 	if ((err = load_players(av, vm)))
 		return (init_error(err, vm));
+	create_arena(vm);
+	write(1, vm->mem, MEM_SIZE);
 	//if ((err = load_arena(vm)))
 	//	return (init_error(err, vm));
 	//execute_vm(vm);
-	ft_printf("%s || %s || %s\n", vm->player[0].name, vm->player[0].comment, vm->player[0].exec);
+	//ft_printf("%s || %s\n", vm->player[0].name, vm->player[0].comment);
+	//write(1, vm->player[0].exec, vm->player[0].size);
 	free(vm);
 	return (0);
 }
