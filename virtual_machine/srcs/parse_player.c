@@ -16,19 +16,21 @@ int     parse_magic(int fd)
 {
     char    buff[4];
     int     bytes;
-    int     res;
+    long long  res;
 
     if (read(fd, &buff, 4) < 4)
         return (1);
-    bytes = 4;
+    bytes = 0;
     res = 0;
-    while (bytes)
+    while (bytes < 4)
     {
-        res += buff[bytes - 1] * ft_power(256, (4 - bytes) );
-        bytes--;
+        res += buff[bytes] * ft_power(256, (4 - (bytes + 1)));
+        ft_printf("byte = %d -> res = %lld\n", buff[bytes], res);
+        bytes++;
     }
     if (res == COREWAR_EXEC_MAGIC)
         return (0);
+    ft_printf("magic: %lld \n", res);
     return (1);
 }
 
@@ -52,11 +54,11 @@ int     parse_exec(int fd, t_vm *vm)
     return (1);
 }
 
-int     parse_player(t_vm *vm, char **av, int *i)
+int     parse_player(t_vm *vm, char **av, int i)
 {
     int fd;
 
-    if ((fd = open(av[*i], O_RDONLY)) <= 0)
+    if ((fd = open(av[i], O_RDONLY)) <= 0)
         return (FILE_ERROR);
     if (vm->nb_players >= MAX_PLAYERS)
         return (PLAYER_OVERLOAD);

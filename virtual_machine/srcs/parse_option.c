@@ -37,7 +37,7 @@ int     dump_option(t_vm *vm, char **av, int *i)
     return (DUMP_ERROR);
 }
 
-int     parse_options(t_vm *vm, char **av, int *i)
+int     parse_option(t_vm *vm, char **av, int *i)
 {
     if (!ft_strcmp(av[*i], "-n"))
         return (number_option(vm, av, i));
