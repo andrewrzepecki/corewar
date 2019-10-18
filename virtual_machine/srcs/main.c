@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 16:51:00 by anrzepec          #+#    #+#             */
-/*   Updated: 2019/10/17 17:17:36 by eviana           ###   ########.fr       */
+/*   Updated: 2019/10/18 18:00:49 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ t_vm 	*init_vm(int ac)
 	if (!(vm = (t_vm*)malloc(sizeof(t_vm))))
 		return (NULL);
 	ft_bzero(vm->mem, MEM_SIZE);
+	ft_bzero(vm->owner, MEM_SIZE);
 	vm->process = NULL;
 	vm->last_live = NULL;
 	vm->dump = 0;
@@ -90,7 +91,11 @@ int		main(int ac, char **av)
 	if ((err = load_players(av, vm)))
 		return (init_error(err, vm));
 	create_arena(vm);
-	write(1, vm->mem, MEM_SIZE);
+
+	cycles_test(vm);
+	//print_arena(vm); // et si retour erreur ?
+	
+	//write(1, vm->mem, MEM_SIZE);
 	//if ((err = load_arena(vm)))
 	//	return (init_error(err, vm));
 	//execute_vm(vm);

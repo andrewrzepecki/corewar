@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 13:56:35 by anrzepec          #+#    #+#             */
-/*   Updated: 2019/10/17 17:12:51 by eviana           ###   ########.fr       */
+/*   Updated: 2019/10/18 18:01:56 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,13 @@
 # define EXEC_ERROR				9
 # define MAGIC_ERROR			10
 # define SIZE_ERROR				11
+# define ALLOC_ERROR			12
+
+/* 
+** COLORS
+*/
+
+# define RED					"{red}"
 
 /*
 Structures basees sur le cookcook du russe/Ukrainien 
@@ -63,12 +70,19 @@ typedef struct 			s_process
 	et executer selon les variables propre a chque cycle. 
 */
 
+// typedef struct 			s_mem
+// {
+// 	unsigned char		x;
+// 	unsigned char		owner;
+// }						t_mem;
+
 typedef	struct			s_vm
 {
 	int					dump;
 	int					nb_args;
 	int					nb_players;
 	unsigned char		mem[MEM_SIZE];
+	unsigned char		owner[MEM_SIZE];
 	t_player			player[MAX_PLAYERS];
 	t_process     		*process;
 	t_player			*last_live; 	/* addresse du joueur ayant appele 'live' en dernier */
@@ -91,6 +105,7 @@ int		read_bytes(unsigned char *mem, size_t size);
 */
 
 void	create_arena(t_vm *vm);
+int     print_arena(t_vm *vm);
 
 /*
 ** Error management
@@ -101,6 +116,11 @@ int		init_error(int error, t_vm *vm);
 /*
 ** Operations
 */
+
+/*
+** Tests
+*/
+void    cycles_test(t_vm *vm);
 
 
 

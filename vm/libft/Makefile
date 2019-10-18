@@ -3,16 +3,16 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: eviana <marvin@42.fr>                      +#+  +:+       +#+         #
+#    By: eviana <eviana@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2019/04/15 11:24:10 by eviana            #+#    #+#              #
-#    Updated: 2019/04/15 11:24:16 by eviana           ###   ########.fr        #
+#    Created: 2019/05/29 19:02:32 by plaurent          #+#    #+#              #
+#    Updated: 2019/07/23 17:37:24 by eviana           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-CC = gcc
-CFLAGS	= -Wall -Werror -Wextra
 NAME = libft.a
+
+CFLAGS	= -Wall -Werror -Wextra
 
 SRC = ft_putchar_fd.c ft_putnbr.c ft_putendl.c ft_putstr.c ft_putchar.c	\
 	  ft_itoa.c ft_strsplit.c ft_strtrim.c ft_strjoin.c ft_strsub.c		\
@@ -29,18 +29,34 @@ SRC = ft_putchar_fd.c ft_putnbr.c ft_putendl.c ft_putstr.c ft_putchar.c	\
 	  ft_lstmap.c ft_foreach.c ft_factorial.c	ft_strcount.c			\
 	  ft_power.c ft_fibonacci.c ft_sqrt.c ft_is_prime.c					\
 	  ft_utoa.c ft_ultoa.c ft_ulltoa.c ft_convert_base.c ft_putull.c	\
-	  ft_size_long.c ft_strallchr.c get_next_line.c	ft_issort.c			\
-	  ft_atol.c ft_split_whitespaces.c ft_swap.c
+	  ft_size_long.c get_next_line.c ft_swap.c ft_strallchr.c			\
+	  ft_tabrev.c ft_tabcpy.c
+	  
+SRC2 = ft_printf/ft_build_str.c ft_printf/ft_conv_oux.c					\
+	  ft_printf/ft_dispatch.c ft_printf/ft_inf_f.c ft_printf/ft_conv_c.c\
+	  ft_printf/ft_conv_di.c ft_printf/ft_conv_f.c ft_printf/ft_conv_p.c\
+	  ft_printf/ft_conv_percent.c ft_printf/ft_conv_s.c					\
+	  ft_printf/ft_fill_buff.c ft_printf/ft_find.c						\
+	  ft_printf/ft_formattotab.c ft_printf/ft_noconv.c					\
+	  ft_printf/ft_preci_0_f.c ft_printf/ft_print_asset.c				\
+	  ft_printf/ft_printf.c ft_printf/ft_set_width.c					\
+	  ft_printf/ft_setprint.c ft_printf/ft_special.c ft_printf/ft_width.c
 
-HEADER = ../includes/
+OBJ2 = ft_build_str.o ft_conv_oux.o ft_dispatch.o ft_inf_f.o ft_conv_c.o\
+	  ft_conv_di.o ft_conv_f.o ft_conv_p.o ft_conv_percent.o ft_conv_s.o\
+	  ft_fill_buff.o ft_find.o ft_formattotab.o ft_noconv.o 			\
+	  ft_preci_0_f.o ft_print_asset.o ft_printf.o ft_set_width.o		\
+	  ft_setprint.o ft_special.o ft_width.o
 
-OBJ = $(SRC:.c=.o) 														\
+HEADER = libft.h ft_printf/ft_printf.h
+
+OBJ = $(SRC:.c=.o)
 
 all: $(NAME)
 
 $(NAME):
-	@$(CC) $(CFLAGS) -c $(SRC) -I $(HEADER)
-	@ar rc $(NAME) $(OBJ)
+	@gcc $(CFLAGS) -c $(SRC) $(SRC2) -I $(HEADER)
+	@ar rc $(NAME) $(OBJ) $(OBJ2)
 	@ranlib $(NAME)
 
 %.o: %.c
@@ -49,7 +65,7 @@ $(NAME):
 .PHONY: clean fclean
 
 clean:
-	@/bin/rm -f $(OBJ) libft.h.gch
+	@/bin/rm -f $(OBJ) $(OBJ2)
 
 fclean: clean
 	@/bin/rm -f $(NAME)

@@ -1,101 +1,76 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   ft_putstr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eviana <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: plaurent <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/06 09:33:00 by eviana            #+#    #+#             */
-/*   Updated: 2019/04/14 17:28:37 by eviana           ###   ########.fr       */
+/*   Created: 2018/11/15 11:16:28 by plaurent          #+#    #+#             */
+/*   Updated: 2019/05/29 18:37:56 by plaurent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/get_next_line.h"
+#include "libft.h"
 
-static char	*sp_strnjoin(char const *s1, char const *s2, size_t n)
+static unsigned int	st_length_line(char *str)
 {
-	char	*str;
-
-	if (!s1 || !s2 || !(str = ft_strnew(ft_strlen(s1) + ft_strlen(s2))))
-		return (NULL);
-	str = ft_strcpy(str, s1);
-	free((void*)s1);
-	return (ft_strncat(str, s2, n));
-}
-
-static int	gnl_noendl_memory(char **line, char **str, int fd, char *buff)
-{
-	size_t	i;
-	int		nbread;
-
-	if (!(*line = ft_strsub(str[fd], 0, ft_strlen(str[fd]))))
-		return (-1);
-	while (!ft_strchr(str[fd], '\n')
-			&& (nbread = read(fd, buff, BUFF_SIZE)) > 0)
-	{
-		i = 0;
-		buff[nbread] = '\0';
-		while (buff[i] && buff[i] != '\n')
-			i++;
-		if (!(*line = sp_strnjoin(*line, buff, i)))
-			return (-1);
-		if (ft_strchr(buff, '\n'))
-		{
-			str[fd] = ft_strncpy(str[fd], (buff + i + 1), ft_strlen(buff) - i);
-			ft_strdel(&str[fd] + ft_strlen(buff) - i - 1);
-			return (1);
-		}
-	}
-	ft_strdel(&str[fd]);
-	if (nbread == 0 && ft_strlen(*line))
-		return (1);
-	return (nbread < 0 ? -1 : 0);
-}
-
-static int	gnl_endl_memory(char **line, char **str, int fd)
-{
-	size_t	i;
+	unsigned int	i;
 
 	i = 0;
-	while (str[fd][i] && str[fd][i] != '\n')
+	while (str[i] != '\n' && str[i] != '\0')
 		i++;
-	if (!(*line = ft_strsub(str[fd], 0, i)))
-		return (-1);
-	str[fd] = ft_strncpy(str[fd], (str[fd] + (i + 1)),
-			(ft_strlen(str[fd]) - (i + 1)));
-	ft_bzero(str[fd] + ft_strlen(str[fd]) - (i + 1), (i + 1));
-	return (1);
+	return (i);
 }
 
-static int	ft_error(char *buff)
+static char			*st_strjoin(char *s1, char *s2)
 {
-	free(buff);
-	return (-1);
+	char		*str;
+	int			nb;
+
+	nb = ft_strlen(s1) + ft_strlen(s2);
+	if (!(str = ft_strnew(nb)))
+		return (NULL);
+	str = ft_strncat(ft_strcpy(str, s1), s2, ft_strlen(s2));
+	free(s1);
+	return (str);
 }
 
-int			get_next_line(const int fd, char **line)
+static char			*st_refresh_str(char *str)
 {
-	static char	*str[MAX_FD + 1];
-	char		*buff;
-	int			res;
-
-	if (!(buff = ft_strnew(BUFF_SIZE)))
-		return (-1);
-	if (fd < 0 || BUFF_SIZE < 1 || !line
-			|| read(fd, buff, 0) < 0)
-		return (ft_error(buff));
-	if (!str[fd])
-		if (!(str[fd] = ft_strnew(BUFF_SIZE)))
-			return (ft_error(buff));
-	if (!ft_strchr(str[fd], '\n'))
-	{
-		res = gnl_noendl_memory(line, str, fd, buff);
-		free(buff);
-		return (res);
-	}
+	if (ft_strchr(str, '\n'))
+		ft_strcpy(str, ft_strchr(str, '\n') + 1);
+	else if (st_length_line(str) > 0)
+		ft_strcpy(str, ft_strchr(str, '\0'));
 	else
+		return (NULL);
+	return (str);
+}
+
+int					get_next_line(int const fd, char **line, int error)
+{
+	char		buff[BUFF_SIZE + 1];
+	static char	*str[4096];
+	int			s;
+
+	if (error)
 	{
-		free(buff);
-		return (gnl_endl_memory(line, str, fd));
+		free(str[fd]);
+		return (-1);
 	}
+	if (fd < 0 || BUFF_SIZE < 1 || !line || read(fd, buff, 0) < 0 ||
+			(!(str[fd]) && (str[fd] = ft_strnew(0)) == NULL))
+		return (-1);
+	while (!(ft_strchr(str[fd], '\n')) && (s = read(fd, buff, BUFF_SIZE)) > 0)
+	{
+		buff[s] = '\0';
+		if (!(str[fd] = st_strjoin(str[fd], buff)))
+			return (-1);
+	}
+	*line = ft_strsub(str[fd], 0, st_length_line(str[fd]));
+	if (!(st_refresh_str(str[fd])))
+	{
+		ft_strdel(&str[fd]);
+		return (0);
+	}
+	return (1);
 }

@@ -3,85 +3,62 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anrzepec <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: eviana <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/12/12 12:41:48 by anrzepec          #+#    #+#             */
-/*   Updated: 2019/10/16 16:56:54 by anrzepec         ###   ########.fr       */
+/*   Created: 2019/02/09 18:08:15 by eviana            #+#    #+#             */
+/*   Updated: 2019/10/18 14:17:49 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_PRINTF_H
 # define FT_PRINTF_H
 
-# include "libft.h"
 # include <stdarg.h>
+# include <wchar.h>
+# include "libft.h"
 
-# define INDEX      0
-# define POSITION   1
-# define VLEN       2
-# define RETURN     3
-
-typedef struct		s_flags
+typedef struct	s_asset
 {
-	char			*attributes;
-	int				width;
-	int				precision;
-	char			*modifier;
-	char			format;
-}					t_flags;
+	char	*flags;
+	size_t	width;
+	int		precision;
+	int		length;
+	int		type;
+	char	*copy;
+}				t_asset;
 
-typedef struct		s_get_format
-{
-	char			*format;
-	int				(*f)(t_flags *, const char *, int *);
-	int				(*fnum)(t_flags *, const char *, int *, va_list ap);
-}					t_get_format;
-
-typedef struct		s_var
-{
-	char			*format;
-	char			*(*f)(va_list, t_flags);
-}					t_var;
-
-char				*ft_numeric_var(va_list ap, t_flags flags);
-char				*ft_str_var(va_list ap, t_flags flags);
-char				*ft_char_var(va_list ap, t_flags flags, int *len);
-char				*ft_float_var(va_list ap, t_flags flags);
-
-int					get_attribute_flag(t_flags *flags, char const *format,
-					int *i);
-int					get_modifier_flag(t_flags *flags, char const *format,
-					int *i);
-int					get_precision_flag(t_flags *flags, char const *format,
-					int *i, va_list ap);
-int					get_width_flag(t_flags *flags, char const *format, int *i,
-					va_list ap);
-
-int					ft_width_wildcard(t_flags *flags, va_list ap);
-int					ft_precision_wildcard(t_flags *flags, va_list ap);
-
-int					ft_printf(const char *format, ...);
-int					ft_get_flags(const char *format, t_flags flags);
-int					ft_format_parser(t_flags *flags, const char *format,
-					va_list ap, t_get_format *g_format_tab);
-char				*ft_apply_flags(va_list ap, t_flags flags, int *len);
-unsigned long long	ft_apply_umodifier(va_list ap, t_flags flags);
-long long int		ft_apply_modifier(va_list ap, t_flags flags);
-long double			ft_double_modifier(va_list ap, t_flags flags);
-int					ft_apply_precision(char **s, t_flags flags);
-int					ft_apply_attrib(char **s, t_flags flags, int *len);
-int					ft_apply_width(char **s, t_flags flags, int width,
-					int *len);
-int					ft_invert_prefix(char **s, char *prefix, t_flags flags,
-					int *len);
-
-char				*ft_unsigned_value(unsigned long long d, t_flags flags);
-void				ft_varchar_free(int nb, ...);
-t_flags				reset_flags(void);
-void				free_current_flags(t_flags *flags);
-t_var				*set_struct_tab(void);
-void				free_struct_tab(t_var *tab);
-t_get_format		*set_flag_tab(void);
-void				free_flag_tab(t_get_format *tab);
-
+int				ft_fill_buff(char *str, int end);
+char			*ft_preci_0(t_asset asset, double n, long k, int i);
+char			*ft_inf_f(t_asset asset, char *str2);
+unsigned long	sp_power(long nb, int power);
+char			**ft_formattotab(const char *restrict s);
+int				ft_isconv(char c);
+int				ft_charcount(const char *restrict s, int i, int mode);
+unsigned int	ft_partsnbr(const char *s);
+char			**ft_setprint(char **tab);
+char			*ft_conv_p(t_asset asset, va_list ap);
+char			*ft_conv_s(t_asset asset, va_list ap);
+char			*ft_conv_c(t_asset asset, va_list ap);
+char			*ft_conv_di(t_asset asset, va_list ap);
+char			*ft_conv_oux(t_asset asset, va_list ap);
+char			*ft_conv_f(t_asset asset, va_list ap);
+char			*ft_conv_percent(t_asset asset, va_list ap);
+char			*ft_noconv(t_asset asset, va_list ap);
+char			*ft_convp_width(t_asset asset, char *res);
+char			*ft_width_f(t_asset asset, char *str, int i, int j);
+int				ft_findtype(char *tab);
+char			*ft_findflags(char *tab);
+int				ft_findlength(char *tab);
+int				ft_findprecision(char *tab);
+size_t			ft_findwidth(char *tab);
+char			*ft_set_precision(char *initial, t_asset *asset, int signmode);
+char			*ft_set_width(char *initial, t_asset asset, int signmode);
+char			*ft_addbuild(char *initial, char *additional, t_asset asset);
+char			*ft_preparewidth(char *processed, t_asset asset, int signmode);
+char			*ft_build_str(char *initial, t_asset asset, int signmode);
+t_asset			ft_digest(char *tab);
+int				ft_pre_dispatch(char **tab, va_list ap);
+void			ft_printasset(t_asset asset);
+int				ft_printf(const char *restrict format, ...);
+char			*sp_strnjoin(char *s1, char *s2, size_t n, int mode);
 #endif

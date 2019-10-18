@@ -3,30 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strrev.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anrzepec <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: plaurent <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/01/03 12:23:44 by anrzepec          #+#    #+#             */
-/*   Updated: 2019/01/03 12:23:46 by anrzepec         ###   ########.fr       */
+/*   Created: 2019/02/14 14:10:15 by plaurent          #+#    #+#             */
+/*   Updated: 2019/02/14 14:11:02 by plaurent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_strrev(char *str)
+char	*ft_strrev(char *str)
 {
+	char	u;
 	int		i;
-	int		j;
-	char	tmp;
+	int		n;
 
-	if (str)
+	i = 0;
+	n = 0;
+	while (str[n] != '\0')
+		n++;
+	while (i < (n / 2))
 	{
-		i = -1;
-		j = ft_strlen(str);
-		while (++i < --j)
-		{
-			tmp = str[i];
-			str[i] = str[j];
-			str[j] = tmp;
-		}
+		u = str[i];
+		str[i] = str[n - i - 1];
+		str[n - i - 1] = u;
+		i++;
 	}
+	return (str);
 }

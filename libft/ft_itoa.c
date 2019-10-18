@@ -3,50 +3,52 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anrzepec <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: plaurent <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/11/06 14:37:40 by anrzepec          #+#    #+#             */
-/*   Updated: 2018/11/09 14:12:54 by anrzepec         ###   ########.fr       */
+/*   Created: 2019/05/29 18:46:59 by plaurent          #+#    #+#             */
+/*   Updated: 2019/05/29 18:47:01 by plaurent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	get_divider(int n)
+static int	st_countsize(int n)
 {
-	int c;
+	int i;
 
-	c = 1;
-	while ((n = n / 10) != 0)
-		c *= 10;
-	return (c);
+	i = 0;
+	if (n <= 0)
+		i++;
+	while (n != 0)
+	{
+		n = n / 10;
+		i++;
+	}
+	return (i);
 }
 
 char		*ft_itoa(int n)
 {
+	long	newnb;
+	int		i;
 	char	*str;
-	int		divider;
-	int		tmp;
-	int		c;
 
-	divider = (n < 0) ? 2 : 1;
-	tmp = n;
-	while ((tmp = tmp / 10) != 0)
-		divider++;
-	if (!(str = (char*)malloc(sizeof(char) * (divider + 1))))
+	newnb = n;
+	i = st_countsize(n);
+	if (!(str = ft_strnew(i)))
 		return (NULL);
-	tmp = 0;
 	if (n < 0)
-		str[0] = '-';
-	c = (n < 0) ? 1 : 0;
-	divider = (n < 0) ? (get_divider(n) * -1) : get_divider(n);
-	while (divider > 1 || divider < -1)
 	{
-		str[c++] = n / divider + 48;
-		n %= divider;
-		divider /= 10;
+		newnb = -newnb;
+		str[0] = '-';
 	}
-	str[c] = (n < 0) ? (n * -1 + 48) : n + 48;
-	str[c + 1] = '\0';
+	if (n == 0)
+		str[0] = '0';
+	while (newnb != 0)
+	{
+		str[i - 1] = (newnb % 10) + '0';
+		newnb = newnb / 10;
+		i--;
+	}
 	return (str);
 }
