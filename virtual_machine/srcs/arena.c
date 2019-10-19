@@ -72,7 +72,7 @@ void    print_pannel(t_vm *vm, int line)
     else if (line == 12)
     {
         pannel_line("last alive : ");
-        ft_printf("%s", vm->player[0].name);
+        ft_printf("%s (%d)", vm->player[0].name, vm->player[0].id);
     }
     else if (line == 13)
     {
