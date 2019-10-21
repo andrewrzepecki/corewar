@@ -105,18 +105,3 @@ int     print_arena(t_vm *vm)
     ft_printf("{eoc}     |\n");
     return (0);
 }
-
-void    create_arena(t_vm *vm)
-{
-    int     i;
-    int     div;
-
-    i = 0;
-    div = MEM_SIZE / vm->nb_players;
-    while (i < vm->nb_players)
-    {
-        ft_memcpy(vm->mem + (div * i), vm->player[i].exec, vm->player[i].size);
-        ft_memset(vm->owner + (div * i), vm->player[i].id, vm->player[i].size);
-        i++;
-    }
-}
