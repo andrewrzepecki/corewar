@@ -54,8 +54,27 @@ t_process         *load_process(t_player player)
     process->pc = 0;  // fonction pour index dans la mem de la premiere instruction
     //process->next_op = get_next_op(process->id);
     process->reg[0] = process->id;  // a verifier si mettre celui du joueur ou du process
+    process->next = NULL;
     ft_bzero(process->reg + sizeof(int), REG_NUMBER - 1);
     return (process);
+}
+
+void        place_process(t_process *lst, t_process *proc)
+{
+    t_process *tmp;
+    t_process *tracer;
+
+    tracer = lst;
+    if (!lst)
+        lst = proc;
+    else
+    {
+        while (tracer->next && tracer->next->id < proc->id)
+            tracer = tracer->next;
+        tmp = tracer->next;
+        tracer->next = proc;
+        proc->next = tmp;
+    }
 }
 
 int        load_process_list(t_vm *vm)
@@ -68,7 +87,7 @@ int        load_process_list(t_vm *vm)
     {
         if (!(proc = load_process(vm->player[i])))
             return (ALLOC_ERROR);
-        //place_process(vm->proc, proc);
+        //place_process(vm->process, proc);
         i++;
     }
     return (0);
