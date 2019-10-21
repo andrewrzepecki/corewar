@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   load_process.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: andrewrzepecki <anrzepec@student.42.f      +#+  +:+       +#+        */
+/*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/19 16:37:07 by andrewrze         #+#    #+#             */
-/*   Updated: 2019/10/19 16:37:11 by andrewrze        ###   ########.fr       */
+/*   Updated: 2019/10/21 18:12:58 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,11 @@ t_op    op_tab[17] =
 	{"lldi", 3, {T_REG | T_DIR | T_IND, T_DIR | T_REG, T_REG}, 14, 50,
 		"long load index", 1, 1},
 	{"lfork", 1, {T_DIR}, 15, 1000, "long fork", 0, 1},
-	{"aff", 1, {T_REG}, 16, 2, "aff", 1, 0}
-	//{0, 0, {0}, 0, 0, 0, 0, 0}
+	{"aff", 1, {T_REG}, 16, 2, "aff", 1, 0},
+	{{0}, 0, {0}, 0, 0, {0}, 0, 0}
 };
 
-t_process         *load_process(t_player player)
+t_process         *load_process_from_player(t_player player)
 {
     t_process *process;
 
@@ -49,13 +49,12 @@ t_process         *load_process(t_player player)
     process->carry = 0;
     process->current_op = player.exec[0];
     process->last_live = 0;
-    process->cycles_left = op_tab[process->current_op].cycles;
-    ft_printf("cycles before execution op %u: %d\n", process->current_op, process->cycles_left);
+    process->cycles_left = op_tab[process->current_op - 1].cycles;
     process->pc = 0;  // fonction pour index dans la mem de la premiere instruction
     //process->next_op = get_next_op(process->id);
     process->reg[0] = process->id;  // a verifier si mettre celui du joueur ou du process
     process->next = NULL;
-    ft_bzero(process->reg + sizeof(int), REG_NUMBER - 1);
+    ft_bzero(process->reg + 4, (REG_NUMBER - 1) * 4);
     return (process);
 }
 
@@ -69,13 +68,12 @@ void        place_process(t_process **lst, t_process *proc)
         *lst = proc;
     else
     {
-        while (tracer->next && tracer->next->id < proc->id)
+        while (tracer->next && tracer->next->id > proc->id)
             tracer = tracer->next;
         tmp = tracer->next;
         tracer->next = proc;
         proc->next = tmp;
     }
-    ft_printf("Here\n");
 }
 
 int        load_process_list(t_vm *vm)
@@ -86,9 +84,9 @@ int        load_process_list(t_vm *vm)
     i = 0;
     while (i < vm->nb_players)
     {
-        if (!(proc = load_process(vm->player[i])))
+        if (!(proc = load_process_from_player(vm->player[i])))
             return (ALLOC_ERROR);
-        place_process(vm->process, proc);
+        place_process(&(vm->process), proc);
         i++;
     }
     return (0);

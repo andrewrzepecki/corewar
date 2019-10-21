@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 16:51:00 by anrzepec          #+#    #+#             */
-/*   Updated: 2019/10/18 18:00:49 by eviana           ###   ########.fr       */
+/*   Updated: 2019/10/21 17:50:53 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,12 @@ int		load_players(char **av, t_vm *vm)
 		else if ((err = parse_player(vm, av, i)))
 			return (err);
 	}
+	i = 0;
+	while (i < vm->nb_players)
+	{
+		ft_printf("%s: %d\n", vm->player[i].name, vm->player[i].id);
+		i++;
+	}
 	return (vm->nb_players > 1 ? 0 : 1);
 }
 
@@ -43,7 +49,6 @@ int		main(int ac, char **av)
 		return (init_error(err, vm));
 	create_arena(vm);
 	load_process_list(vm);
-	ft_printf("here\n");
 	cycles_test(vm);
 	//print_arena(vm); // et si retour erreur ?
 	free(vm);
