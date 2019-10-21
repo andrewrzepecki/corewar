@@ -59,14 +59,14 @@ t_process         *load_process(t_player player)
     return (process);
 }
 
-void        place_process(t_process *lst, t_process *proc)
+void        place_process(t_process **lst, t_process *proc)
 {
     t_process *tmp;
     t_process *tracer;
 
-    tracer = lst;
-    if (!lst)
-        lst = proc;
+    tracer = *lst;
+    if (!*lst)
+        *lst = proc;
     else
     {
         while (tracer->next && tracer->next->id < proc->id)
@@ -75,6 +75,7 @@ void        place_process(t_process *lst, t_process *proc)
         tracer->next = proc;
         proc->next = tmp;
     }
+    ft_printf("Here\n");
 }
 
 int        load_process_list(t_vm *vm)
@@ -87,7 +88,7 @@ int        load_process_list(t_vm *vm)
     {
         if (!(proc = load_process(vm->player[i])))
             return (ALLOC_ERROR);
-        //place_process(vm->process, proc);
+        place_process(vm->process, proc);
         i++;
     }
     return (0);

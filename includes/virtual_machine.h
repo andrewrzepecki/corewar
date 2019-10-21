@@ -32,12 +32,25 @@
 # define MAGIC_ERROR			10
 # define SIZE_ERROR				11
 # define ALLOC_ERROR			12
+# define VIS_ERROR				13
 
 /* 
 ** COLORS
 */
 
 # define RED					"{red}"
+
+typedef struct 			s_op
+{
+	char 				name[6];
+	int					params;
+	int					type[3];
+	int					op_number;
+	int					cycles;
+	char				description[50];
+	int					a;
+	int					b;
+}						t_op;
 
 /*
 Structures basees sur le cookcook du russe/Ukrainien 
@@ -79,12 +92,13 @@ typedef struct 			s_process
 typedef	struct			s_vm
 {
 	int					dump;
+	int					vis;
 	int					nb_args;
 	int					nb_players;
 	unsigned char		mem[MEM_SIZE];
 	unsigned char		owner[MEM_SIZE];
 	t_player			player[MAX_PLAYERS];
-	t_process     		*process;
+	t_process     		**process;
 	t_player			*last_live; 	/* addresse du joueur ayant appele 'live' en dernier */
 	int					cycles;
 	int					nb_lives;  		/* nombre de 'live' durant chaque cycle_to_die */
@@ -98,6 +112,8 @@ typedef	struct			s_vm
 
 int		parse_option(t_vm *vm, char **av, int *i);
 int		parse_player(t_vm *vm, char **av, int i);
+
+// TOOLS
 int		read_bytes(unsigned char *mem, size_t size);
 
 /*
@@ -120,8 +136,15 @@ int		init_error(int error, t_vm *vm);
 /*
 ** Tests
 */
+int 	load_process_list(t_vm *vm);
 void    cycles_test(t_vm *vm);
 
+// INIT
+t_vm	*init_vm(int ac);
+void	init_players(t_vm *vm);
+void	create_arena(t_vm *vm);
 
+// PRINT
+int		print_arena(t_vm *vm);
 
 #endif

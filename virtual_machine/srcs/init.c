@@ -49,7 +49,7 @@ t_vm 	*init_vm(int ac)
 	ft_bzero(vm->mem, MEM_SIZE);
 	ft_bzero(vm->owner, MEM_SIZE);
 	vm->vis = -1;
-	vm->process = NULL;
+	*vm->process = NULL;
 	vm->last_live = NULL;
 	vm->dump = 0;
 	vm->nb_args = ac;
