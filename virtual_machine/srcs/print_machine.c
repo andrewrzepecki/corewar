@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/17 13:27:25 by eviana            #+#    #+#             */
-/*   Updated: 2019/10/21 17:26:07 by eviana           ###   ########.fr       */
+/*   Updated: 2019/10/21 20:36:13 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,19 @@ void    print_pannel(t_vm *vm, int line)
     ft_printf("\n");
 }
 
+void    debug_lines(t_vm *vm)
+{
+    t_process   *current;
+
+    current = vm->process;
+    ft_printf("\nDEBUG :\n");
+    while (current)
+    {
+        ft_printf("Proc %d pc : %d\n", current->id, current->pc);
+        current = current->next;
+    }
+}
+
 int     print_arena(t_vm *vm)
 {
     int             i;
@@ -103,5 +116,6 @@ int     print_arena(t_vm *vm)
         i++;
     }
     ft_printf("{eoc}     |\n");
+    debug_lines(vm);
     return (0);
 }

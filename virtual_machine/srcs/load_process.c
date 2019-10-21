@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/19 16:37:07 by andrewrze         #+#    #+#             */
-/*   Updated: 2019/10/21 18:12:58 by eviana           ###   ########.fr       */
+/*   Updated: 2019/10/21 22:32:23 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,12 @@ t_process         *load_process_from_player(t_player player)
         return (NULL);
     process->id = player.id;
     process->carry = 0;
-    process->current_op = player.exec[0];
     process->last_live = 0;
     process->cycles_left = op_tab[process->current_op - 1].cycles;
-    process->pc = 0;  // fonction pour index dans la mem de la premiere instruction
-    //process->next_op = get_next_op(process->id);
-    process->reg[0] = process->id;  // a verifier si mettre celui du joueur ou du process
+    process->pc = player.init_pc;
+    process->current_op = player.exec[0];
+    //process->next_op = get_next_op(process->id); // Je pense que ce n'est pas utile a ce stade
+    process->reg[0] = process->id; // a verifier si mettre celui du joueur ou du process
     process->next = NULL;
     ft_bzero(process->reg + 4, (REG_NUMBER - 1) * 4);
     return (process);

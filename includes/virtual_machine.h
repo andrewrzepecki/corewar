@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 13:56:35 by anrzepec          #+#    #+#             */
-/*   Updated: 2019/10/21 18:18:12 by eviana           ###   ########.fr       */
+/*   Updated: 2019/10/21 22:33:09 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ typedef struct			s_player
 	char				comment[COMMENT_LENGTH + 4];
 	unsigned int		size;
 	char				exec[CHAMP_MAX_SIZE];
+	int					init_pc;
 }						t_player;
 
 typedef struct 			s_process
@@ -72,8 +73,8 @@ typedef struct 			s_process
 	int					current_op; 	/* operation a executer */
 	int					last_live;		/* cycle du dernier 'live' */
 	int					cycles_left; 	/* cycles restant avant execution */
-	int					pc;   	/* position sur l'arene du cariage */
-	int					next_op; 			/* nombre d'octets avant prochaine operation */
+	int					pc;				/* position sur l'arene du cariage */
+	int					next_op; 		/* utile ? nombre d'octets avant prochaine operation */
 	int					reg[REG_NUMBER];/* registres du carriage ??? unique au carriage ou commum pour chaque process */
 	struct s_process	*next;
 }						t_process;
@@ -137,7 +138,7 @@ int		init_error(int error, t_vm *vm);
 ** Tests
 */
 int 	load_process_list(t_vm *vm);
-void    cycles_test(t_vm *vm);
+void    cycles(t_vm *vm);
 
 // INIT
 t_vm	*init_vm(int ac);

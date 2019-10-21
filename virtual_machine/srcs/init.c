@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 12:46:35 by andrewrze         #+#    #+#             */
-/*   Updated: 2019/10/21 17:47:36 by eviana           ###   ########.fr       */
+/*   Updated: 2019/10/21 23:46:25 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void    create_arena(t_vm *vm)
     {
         ft_memcpy(vm->mem + (div * i), vm->player[i].exec, vm->player[i].size);
         ft_memset(vm->owner + (div * i), vm->player[i].id, vm->player[i].size);
+		vm->player[i].init_pc = div * i;
         i++;
     }
 }
@@ -51,7 +52,7 @@ t_vm 	*init_vm(int ac)
 	vm->vis = -1;
 	vm->process = (t_process*)malloc(sizeof(t_process)); // *
 	vm->process = NULL; // *
-	vm->last_live = NULL;
+	vm->last_live = NULL;// Le russe dit qu'elle doit etre initialisé avec le plus grand id de joueur
 	vm->dump = 0;
 	vm->nb_args = ac;
 	vm->nb_players = 0;
