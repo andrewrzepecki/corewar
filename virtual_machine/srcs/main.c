@@ -92,7 +92,8 @@ int		main(int ac, char **av)
 	if ((err = load_players(av, vm)))
 		return (init_error(err, vm));
 	create_arena(vm);
-
+	load_process_list(vm);
+	ft_printf("here\n");
 	cycles_test(vm);
 	//print_arena(vm); // et si retour erreur ?
 	

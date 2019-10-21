@@ -17,7 +17,10 @@ void    cycles_test(t_vm *vm)
     while (1)
     {
         vm->cycles++;
-        sleep(1);
-        print_arena(vm);
+        if (vm->vis > 0 && vm->vis % vm->cycles)
+        {
+            print_arena(vm);
+            sleep(1);
+        }
     }
 }
