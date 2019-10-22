@@ -6,7 +6,7 @@
 #    By: eviana <eviana@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/08/21 15:01:58 by eviana            #+#    #+#              #
-#    Updated: 2019/10/21 19:12:58 by eviana           ###   ########.fr        #
+#    Updated: 2019/10/22 14:41:28 by eviana           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,8 @@ COMMON		= main \
 			cycles \
 			print_machine \
 			tools \
-			error
+			error \
+			op
 INCLUDES	= virtual_machine \
 			op \
 			libft \

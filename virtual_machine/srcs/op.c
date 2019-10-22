@@ -6,53 +6,35 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 18:36:52 by eviana            #+#    #+#             */
-/*   Updated: 2019/10/21 18:38:12 by eviana           ###   ########.fr       */
+/*   Updated: 2019/10/22 14:41:11 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "virtual_machine.h"
 
-int		zjmp(t_vm *vm, int pc)
+t_op    g_op_tab[17] =
 {
-	//vm->time += 20; // Comment traiter la durée ?
-	//move_pc(vm, proc_id, 1);
-	if (vm->carry)
-		return (read_address(vm, (pc + 1) % MEM_SIZE, 2)); // En sortie il faudra appliquer le % MEM_SIZE, on peut le faire en utilisant move_pc
-	else
-		return (3); // 1 + 2 : on passe l'opcode, puis on passe le D2
-}
-
-/*
-**	Ne pas oublier de move_pc(vm, proc_id, 1) avant chaque fonction ==> NON
-**  pour passer l'opcode et se retrouver soit sur l'ocp soit sur le 1er argument
-**	Rajouter l'adressage restreint
-*/
-
-int			ldi(t_vm *vm, int pc)
-{
-	int     params[3];
-	int		count; // Nous permet de savoir de combien de case avancer jusqu'a la fin de l'instruction
-	
-	//vm->time += 25; // Comment traiter la durée ?
-	//move_pc(vm, proc_id, 1);
-	params = set_params(vm, pc, &count, 2);
-	vm->reg[params[2]] = read_address(vm, rel_address(vm, proc_id, params[0], params[1]));
-	if (vm->reg[params[2]] == 0)
-		vm->carry = 1;
-	else
-		vm->carry = 0;
-	return (count);
-}
-
-int			sti(t_vm *vm, int proc_id)
-{
-	t_params	params;
-
-	params = set_params(vm, proc_id);
-	vm->mem[rel_address(vm, proc_id, params.n[1], params.n[2])] = vm->reg[params[0]];
-	if (vm->reg[params[0]] == 0)
-		vm->carry = 1;
-	else
-		vm->carry = 0;
-	return (0);
-}
+	{"live", 1, {T_DIR}, 1, 10, "alive", 0, 0},
+	{"ld", 2, {T_DIR | T_IND, T_REG}, 2, 5, "load", 1, 0},
+	{"st", 2, {T_REG, T_IND | T_REG}, 3, 5, "store", 1, 0},
+	{"add", 3, {T_REG, T_REG, T_REG}, 4, 10, "addition", 1, 0},
+	{"sub", 3, {T_REG, T_REG, T_REG}, 5, 10, "soustraction", 1, 0},
+	{"and", 3, {T_REG | T_DIR | T_IND, T_REG | T_IND | T_DIR, T_REG}, 6, 6,
+		"et (and  r1, r2, r3   r1&r2 -> r3", 1, 0},
+	{"or", 3, {T_REG | T_IND | T_DIR, T_REG | T_IND | T_DIR, T_REG}, 7, 6,
+		"ou  (or   r1, r2, r3   r1 | r2 -> r3", 1, 0},
+	{"xor", 3, {T_REG | T_IND | T_DIR, T_REG | T_IND | T_DIR, T_REG}, 8, 6,
+		"ou (xor  r1, r2, r3   r1^r2 -> r3", 1, 0},
+	{"zjmp", 1, {T_DIR}, 9, 20, "jump if zero", 0, 1},
+	{"ldi", 3, {T_REG | T_DIR | T_IND, T_DIR | T_REG, T_REG}, 10, 25,
+		"load index", 1, 1},
+	{"sti", 3, {T_REG, T_REG | T_DIR | T_IND, T_DIR | T_REG}, 11, 25,
+		"store index", 1, 1},
+	{"fork", 1, {T_DIR}, 12, 800, "fork", 0, 1},
+	{"lld", 2, {T_DIR | T_IND, T_REG}, 13, 10, "long load", 1, 0},
+	{"lldi", 3, {T_REG | T_DIR | T_IND, T_DIR | T_REG, T_REG}, 14, 50,
+		"long load index", 1, 1},
+	{"lfork", 1, {T_DIR}, 15, 1000, "long fork", 0, 1},
+	{"aff", 1, {T_REG}, 16, 2, "aff", 1, 0},
+	{{0}, 0, {0}, 0, 0, {0}, 0, 0}
+};

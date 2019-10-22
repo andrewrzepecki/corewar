@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 13:56:35 by anrzepec          #+#    #+#             */
-/*   Updated: 2019/10/21 22:33:09 by eviana           ###   ########.fr       */
+/*   Updated: 2019/10/22 12:47:10 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,8 @@ typedef	struct			s_vm
 	int					cycles_to_die;  /* = CYCLES_TO_DIE || cycles avant ??verifications?? */
 	int					nb_checks; 		/* ?? */
 }						t_vm;
+
+extern t_op				g_op_tab[17];
 
 /*
 ** Parsing tools
