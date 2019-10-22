@@ -6,11 +6,23 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 12:49:41 by andrewrze         #+#    #+#             */
-/*   Updated: 2019/10/21 22:15:22 by eviana           ###   ########.fr       */
+/*   Updated: 2019/10/22 19:57:26 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "virtual_machine.h"
+
+int			is_valid_reg(int reg)
+{
+	if (reg > 0 && reg < 17)
+		return (1);
+	return (0);
+}
+
+int			rel_address(t_process *proc, int add1, int add2)
+{
+	return ((proc->pc + ((add1 + add2) % IDX_MOD)) % MEM_SIZE);
+}
 
 int			read_address(t_vm *vm, int pc, size_t bytes)
 {

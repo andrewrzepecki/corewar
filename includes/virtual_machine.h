@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 13:56:35 by anrzepec          #+#    #+#             */
-/*   Updated: 2019/10/22 12:47:10 by eviana           ###   ########.fr       */
+/*   Updated: 2019/10/22 20:33:21 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,9 @@ typedef struct 			s_op
 	int					op_number;
 	int					cycles;
 	char				description[50];
-	int					restr;
+	int					ocp;
 	int					dir_size;
+	int					restr;
 }						t_op;
 
 /*
@@ -64,6 +65,7 @@ typedef struct			s_player
 	unsigned int		size;
 	char				exec[CHAMP_MAX_SIZE];
 	int					init_pc;
+	int					last_live;		/* cycle du dernier live */
 }						t_player;
 
 typedef struct 			s_process
@@ -105,49 +107,65 @@ typedef	struct			s_vm
 	int					nb_lives;  		/* nombre de 'live' durant chaque cycle_to_die */
 	int					cycles_to_die;  /* = CYCLES_TO_DIE || cycles avant ??verifications?? */
 	int					nb_checks; 		/* ?? */
+	int					last_verif;		/* cycle de la dernière verification des process en vie */
 }						t_vm;
+
+typedef struct    s_param
+{
+  int n[3];
+  int valid;	// usefull ? a utiliser pour remonter un probleme de validité des paramétres
+}                 t_param;
 
 extern t_op				g_op_tab[17];
 
 /*
-** Parsing tools
+**	Init
 */
+t_vm	*init_vm(int ac);
+void	init_players(t_vm *vm);
+void	create_arena(t_vm *vm);
+int 	load_process_list(t_vm *vm);
 
+/*
+** Parsing
+*/
 int		parse_option(t_vm *vm, char **av, int *i);
 int		parse_player(t_vm *vm, char **av, int i);
 
-// TOOLS
-int		read_bytes(unsigned char *mem, size_t size);
-int     check_player_numbers(t_vm *vm, int player_nb);
 /*
-**	Init
+** Runtime
 */
-
-void	create_arena(t_vm *vm);
-int     print_arena(t_vm *vm);
-
-/*
-** Error management
-*/
-
-int		init_error(int error, t_vm *vm);
+void	cycles(t_vm *vm);
+t_param	set_params(t_vm *vm, t_process *proc, int pc, int *offset);
 
 /*
 ** Operations
 */
+int		op_zjmp(t_vm *vm, t_process *proc);
+int		op_ldi(t_vm *vm, t_process *proc);
+int		op_sti(t_vm *vm, t_process *proc);
+
+/*
+** Tools
+*/
+int		rel_address(t_process *proc, int add1, int add2);
+int		read_address(t_vm *vm, int pc, size_t bytes);
+int		read_bytes(unsigned char *mem, size_t size);
+int     check_player_numbers(t_vm *vm, int player_nb);
+int		is_valid_reg(int reg);
+
+/*
+** Error management
+*/
+int		init_error(int error, t_vm *vm);
+
+/*
+** Print
+*/
+int		print_arena(t_vm *vm);
 
 /*
 ** Tests
 */
-int 	load_process_list(t_vm *vm);
-void    cycles(t_vm *vm);
-
-// INIT
-t_vm	*init_vm(int ac);
-void	init_players(t_vm *vm);
-void	create_arena(t_vm *vm);
-
-// PRINT
-int		print_arena(t_vm *vm);
 
 #endif

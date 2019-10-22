@@ -6,7 +6,7 @@
 #    By: eviana <eviana@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/08/21 15:01:58 by eviana            #+#    #+#              #
-#    Updated: 2019/10/22 14:41:28 by eviana           ###   ########.fr        #
+#    Updated: 2019/10/22 18:55:37 by eviana           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,9 @@ COMMON		= main \
 			print_machine \
 			tools \
 			error \
-			op
+			op \
+			operations \
+			params
 INCLUDES	= virtual_machine \
 			op \
 			libft \
@@ -80,7 +82,7 @@ $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 
 clean :
 	@make clean -C ../libft
-	@printf "[$(NAME)] removing\t$(PINK)all obj file$(WHITE)"
+	@printf "[$(NAME)] removing\t$(PINK)all obj files$(WHITE)"
 	@rm -rf $(OBJ_PATH)
 	@printf '\t'$(OK)'\n'
 

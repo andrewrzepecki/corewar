@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/18 17:58:15 by eviana            #+#    #+#             */
-/*   Updated: 2019/10/22 15:14:39 by eviana           ###   ########.fr       */
+/*   Updated: 2019/10/22 20:18:20 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,7 @@
 
 int     op_dispatch(t_vm *vm, t_process *proc, int op_code)
 {
-	char	*(*op[16])(t_vm*, t_process*);
-    int     offset;
+	//int     (*op[16])(t_vm*, t_process*);
 
 	// op[0] = &op_live;
 	// op[1] = &op_ld;
@@ -33,8 +32,9 @@ int     op_dispatch(t_vm *vm, t_process *proc, int op_code)
 	// op[13] = &op_lldi;
 	// op[14] = &op_lfork;
 	// op[15] = &op_aff;
-    offset = op[op_code - 1](vm, proc);
-	return (offset);
+	//return (op[op_code - 1](vm, proc));
+    ft_printf("cycle %d : opcode %d pour proc %d\n", vm->cycles, op_code, proc->id);
+    return(0);
 }
 
 int     is_valid_op(int op_code)
@@ -48,7 +48,7 @@ int     is_valid_op(int op_code)
 void    get_cycles_left(t_process *proc)
 {
     if (is_valid_op(proc->current_op))
-        proc->cycles_left = g_op_tab[proc->current_op].cycles;
+        proc->cycles_left = g_op_tab[proc->current_op - 1].cycles;
     else // useless, ici pour la conpréhension
         proc->cycles_left = 0;
 }
@@ -87,13 +87,13 @@ void    process_review(t_vm *vm)
     {
         if (!current->cycles_left)
             update_process(vm, current);
-        else // doit-on checker aussi la validité de l'opcode ici ?
+        else // doit-on aussi checker la validité de l'opcode ici ?
             current->cycles_left--;
         current = current->next;
     }
 }
 
-void    life_check(t_vm *vm)
+int    life_check(t_vm *vm)
 {
     t_process   *current;
 
@@ -104,22 +104,33 @@ void    life_check(t_vm *vm)
         // if pas de vie, retirer de la liste des process
         current = current->next;
     }
-    /* garder une valeur de retour pour la condition d'arret du while de cycles() ? 
+    /* garder une valeur de retour pour la condition d'arrêt du while de cycles() ? 
     ** ex : si plus qu'un ou moins en vie, return 0
     */
+    return (1);
 }
 
 void    cycles(t_vm *vm)
 {
-    while (1) // trouver condition d'arret, quand il ne reste plus qu'un joueur en vie ?
+    while (1) // trouver condition d'arrêt, quand il ne reste plus qu'un joueur en vie ?
     {
-        if (vm->cycles != 0 && !(vm->cycles % CYCLE_TO_DIE))
-            life_check(vm);
+        if (vm->cycles != 0 && !((vm->cycles - vm->last_verif) % CYCLE_TO_DIE) || CYCLE_TO_DIE <= 0) // à changer pour prendre en compte l'évolution de cycles_to_die
+        {
+            if ((vm->nb_lives = life_check(vm) >= NBR_LIVE)
+                || (++(vm->nb_checks) == MAX_CHECKS))
+            {
+                vm->cycles_to_die -= CYCLE_DELTA;
+                vm->nb_checks = 0;
+            }
+            vm->last_verif = vm->cycles;
+        }
+        ft_printf("Cycle : %d\n", vm->cycles);
         process_review(vm);
+        ft_printf("Review faite\n");
         if (vm->vis != -1 && !(vm->cycles % vm->vis))
         {
             print_arena(vm);
-            sleep(10);
+            //sleep(10);
         }
         vm->cycles++;
     }

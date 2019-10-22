@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 12:46:35 by andrewrze         #+#    #+#             */
-/*   Updated: 2019/10/21 23:46:25 by eviana           ###   ########.fr       */
+/*   Updated: 2019/10/22 15:56:36 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ t_vm 	*init_vm(int ac)
 	vm->nb_lives = 0;
 	vm->cycles_to_die = CYCLE_TO_DIE;
 	vm->nb_checks = 0;
+	vm->last_verif = 0; // NEW ! usefull ?
 	init_players(vm);
 	return (vm);
 }
