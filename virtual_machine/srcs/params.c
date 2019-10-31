@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 18:33:09 by eviana            #+#    #+#             */
-/*   Updated: 2019/10/22 18:45:52 by eviana           ###   ########.fr       */
+/*   Updated: 2019/10/31 20:13:28 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,12 @@ int			get_param(t_vm *vm, t_process *proc, int pc, int code)
 
 	dir_size = (g_op_tab[proc->current_op - 1].dir_size ? 2 : 4);
 	if (code == REG_CODE)
-		return (proc->reg[read_address(vm, pc, 1)]);
+	{
+		if (is_valid_reg(read_address(vm, pc, 1)))
+			return (read_address(vm, pc, 1));
+		else
+			return (-1);
+	}
 	else if (code == DIR_CODE)
 		return (read_address(vm, pc, dir_size));
 	else if (code == IND_CODE) // attention, cela doit etre lu par rapport au pc initial et dépend de l'addressage restreint
@@ -64,7 +69,6 @@ int			param_size(int code, int dir_size)
 t_param		set_params(t_vm *vm, t_process *proc, int pc, int *offset) // opti avec l'offset à voir
 {
 	int			i;
-	int			code;
 	char		ocp;
 	t_param     params;
 	int			dir_size;
@@ -75,13 +79,15 @@ t_param		set_params(t_vm *vm, t_process *proc, int pc, int *offset) // opti avec
 	*offset = 2; // 1 + 1 : on passera l'opcode puis l'ocp
 	check_ocp(ocp); // Faire une action si nul : perror ?
 	dir_size = (g_op_tab[proc->current_op - 1].dir_size ? 2 : 4);
+	params.valid = 1;
 	while (i >= 0)
 	{
 		ocp = ocp >> 2;
-		code = get_code(ocp);
-		params.n[i] = get_param(vm, proc, pc, code);
-		pc = (pc + param_size(code, dir_size)) % MEM_SIZE;
-		*offset = *offset + param_size(code, dir_size);
+		params.c[i] = get_code(ocp);
+		if ((params.n[i] = get_param(vm, proc, pc, params.c[i])) == -1)
+			params.valid = 0;
+		pc = (pc + param_size(params.c[i], dir_size)) % MEM_SIZE;
+		*offset = *offset + param_size(params.c[i], dir_size);
 		i--;
 	}
 	return (params);

@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 13:56:35 by anrzepec          #+#    #+#             */
-/*   Updated: 2019/10/22 20:33:21 by eviana           ###   ########.fr       */
+/*   Updated: 2019/10/31 20:23:43 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,8 +112,9 @@ typedef	struct			s_vm
 
 typedef struct    s_param
 {
-  int n[3];
-  int valid;	// usefull ? a utiliser pour remonter un probleme de validité des paramétres
+  int n[3];		// La valeur du parametre
+  int c[3];		// Le code / type du parametre : REG, IND, DIR ?
+  int valid;	// Pour remonter un probleme de validité des paramétres
 }                 t_param;
 
 extern t_op				g_op_tab[17];
@@ -141,18 +142,31 @@ t_param	set_params(t_vm *vm, t_process *proc, int pc, int *offset);
 /*
 ** Operations
 */
+int		op_live(t_vm *vm, t_process *proc);
+int		op_ld(t_vm *vm, t_process *proc);
+int		op_st(t_vm *vm, t_process *proc);
+int		op_add(t_vm *vm, t_process *proc);
+int		op_sub(t_vm *vm, t_process *proc);
+int		op_and(t_vm *vm, t_process *proc);
+int		op_or(t_vm *vm, t_process *proc);
+int		op_xor(t_vm *vm, t_process *proc);
 int		op_zjmp(t_vm *vm, t_process *proc);
 int		op_ldi(t_vm *vm, t_process *proc);
 int		op_sti(t_vm *vm, t_process *proc);
+
+int		op_lld(t_vm *vm, t_process *proc);
+int		op_lldi(t_vm *vm, t_process *proc);
 
 /*
 ** Tools
 */
 int		rel_address(t_process *proc, int add1, int add2);
+int		long_rel_address(t_process *proc, int add1, int add2);
 int		read_address(t_vm *vm, int pc, size_t bytes);
 int		read_bytes(unsigned char *mem, size_t size);
 int     check_player_numbers(t_vm *vm, int player_nb);
 int		is_valid_reg(int reg);
+void	write_to_address(t_vm *vm, t_process *proc, int addr, int to_write);
 
 /*
 ** Error management

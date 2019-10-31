@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/22 14:40:47 by eviana            #+#    #+#             */
-/*   Updated: 2019/10/22 20:34:28 by eviana           ###   ########.fr       */
+/*   Updated: 2019/10/31 20:20:41 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,127 @@ int		op_ld(t_vm *vm, t_process *proc)
 	int		offset;
 
 	params = set_params(vm, proc, proc->pc, &offset); // en esperant que set_params marche bien quand il n'y a que 2 params
-	if (is_valid_reg(params.n[1]))
+	if (params.valid) // anciennement : if (is_valid_reg(params.n[1]))
 	{
 		proc->reg[params.n[1]] = params.n[0];
 		if (proc->reg[params.n[0]] == 0)
+			proc->carry = 1;
+		else
+			proc->carry = 0;
+	}
+	return (offset);
+}
+
+int		op_st(t_vm *vm, t_process *proc)
+{
+	t_param	params;
+	int		offset;
+
+	params = set_params(vm, proc, proc->pc, &offset);
+	if (params.valid) // anciennement : if (is_valid_reg(params.n[0]))
+	{
+		if (params.c[1] == IND_CODE)
+			write_to_address(vm, proc, rel_address(proc, params.n[1], 0), proc->reg[params.n[0]]);
+		else
+			proc->reg[params.n[1]] = proc->reg[params.n[0]];
+		if (proc->reg[params.n[0]] == 0)
+			proc->carry = 1;
+		else
+			proc->carry = 0;
+	}
+	return (offset);
+}
+
+int		op_add(t_vm *vm, t_process *proc)
+{
+	t_param params;
+	int		offset;
+
+	params = set_params(vm, proc, proc->pc, &offset);
+	if (params.valid)
+	{
+		proc->reg[params.n[2]] = proc->reg[params.n[0]] + proc->reg[params.n[1]]; // et si il y a overflow, si l'addition depasse un int ?
+		if (proc->reg[params.n[2]] == 0)
+			proc->carry = 1;
+		else
+			proc->carry = 0;
+	}
+	return (offset);
+}
+
+int		op_sub(t_vm *vm, t_process *proc)
+{
+	t_param params;
+	int		offset;
+
+	params = set_params(vm, proc, proc->pc, &offset);
+	if (params.valid)
+	{
+		proc->reg[params.n[2]] = proc->reg[params.n[0]] - proc->reg[params.n[1]]; // et si il y a overflow, si l'addition depasse un int ?
+		if (proc->reg[params.n[2]] == 0)
+			proc->carry = 1;
+		else
+			proc->carry = 0;
+	}
+	return (offset);	
+}
+
+int		op_and(t_vm *vm, t_process *proc)
+{
+	t_param params;
+	int		offset;
+
+	params = set_params(vm, proc, proc->pc, &offset);
+	if (params.valid)
+	{
+		if (params.c[0] == REG_CODE)
+			params.n[0] = proc->reg[params.n[0]];
+		if (params.c[1] == REG_CODE)
+			params.n[1] = proc->reg[params.n[1]];
+		proc->reg[params.n[2]] = params.n[0] & params.n[1];
+		if (proc->reg[params.n[2]] == 0)
+			proc->carry = 1;
+		else
+			proc->carry = 0;
+	}
+	return (offset);
+}
+
+int		op_or(t_vm *vm, t_process *proc)
+{
+	t_param params;
+	int		offset;
+
+	params = set_params(vm, proc, proc->pc, &offset);
+	if (params.valid)
+	{
+		if (params.c[0] == REG_CODE)
+			params.n[0] = proc->reg[params.n[0]];
+		if (params.c[1] == REG_CODE)
+			params.n[1] = proc->reg[params.n[1]];
+		proc->reg[params.n[2]] = params.n[0] | params.n[1];
+		if (proc->reg[params.n[2]] == 0)
+			proc->carry = 1;
+		else
+			proc->carry = 0;
+	}
+	return (offset);
+}
+
+int		op_xor(t_vm *vm, t_process *proc)
+{
+	t_param params;
+	int		offset;
+
+	params = set_params(vm, proc, proc->pc, &offset);
+	if (params.valid)
+	{
+		if (params.c[0] == REG_CODE)
+			params.n[0] = proc->reg[params.n[0]];
+		if (params.c[1] == REG_CODE)
+			params.n[1] = proc->reg[params.n[1]];
+		proc->reg[params.n[2]] = params.n[0] ^ params.n[1];
+		if (proc->reg[params.n[2]] == 0)
 			proc->carry = 1;
 		else
 			proc->carry = 0;
@@ -59,8 +176,10 @@ int		op_ldi(t_vm *vm, t_process *proc)
 	int		offset; // Nous permet de savoir de combien de case avancer jusqu'à la fin de l'instruction
 	
 	params = set_params(vm, proc, proc->pc, &offset);
-	if (is_valid_reg(params.n[2]))
+	if (params.valid ) // anciennement : if (is_valid_reg(params.n[2]))
 	{
+		if (params.c[0] == REG_CODE)
+			params.n[0] = proc->reg[params.n[0]];
 		proc->reg[params.n[2]] = read_address(vm, rel_address(proc, params.n[0], params.n[1]), 4);
 		if (proc->reg[params.n[2]] == 0)
 			proc->carry = 1;
@@ -76,9 +195,12 @@ int		op_sti(t_vm *vm, t_process *proc)
 	int		offset;
 
 	params = set_params(vm, proc, proc->pc, &offset);
-	if (is_valid_reg(params.n[0]))
+	if (params.valid) // anciennement : if (is_valid_reg(params.n[0]))
 	{
-		vm->mem[rel_address(proc, params.n[1], params.n[2])] = proc->reg[params.n[0]];
+		//vm->mem[rel_address(proc, params.n[1], params.n[2])] = proc->reg[params.n[0]]; // erreur car ne prend pas en compte les 4 octets ou ecrire
+		if (params.c[1] == REG_CODE)
+			params.n[1] = proc->reg[params.n[1]];
+		write_to_address(vm, proc, rel_address(proc, params.n[1], params.n[2]), proc->reg[params.n[0]]);
 		if (proc->reg[params.n[0]] == 0)
 			proc->carry = 1;
 		else
@@ -86,3 +208,51 @@ int		op_sti(t_vm *vm, t_process *proc)
 	}
 	return (offset);
 }
+
+// int		op_fork(t_vm *vm, t_process *proc)
+// {
+// }
+
+int		op_lld(t_vm *vm, t_process *proc) // identique a op_ld car l'addressage restreint est pris en compte dans set_params / get_param
+{
+	t_param params;
+	int		offset;
+
+	params = set_params(vm, proc, proc->pc, &offset);
+	if (params.valid)
+	{
+		proc->reg[params.n[1]] = params.n[0];
+		if (proc->reg[params.n[0]] == 0)
+			proc->carry = 1;
+		else
+			proc->carry = 0;
+	}
+	return (offset);
+}
+
+int		op_lldi(t_vm *vm, t_process *proc)
+{
+	t_param	params;
+	int		offset;
+	
+	params = set_params(vm, proc, proc->pc, &offset);
+	if (params.valid )
+	{
+		if (params.c[0] == REG_CODE)
+			params.n[0] = proc->reg[params.n[0]];
+		proc->reg[params.n[2]] = read_address(vm, long_rel_address(proc, params.n[0], params.n[1]), 4);
+		if (proc->reg[params.n[2]] == 0)
+			proc->carry = 1;
+		else
+			proc->carry = 0;
+	}
+	return (offset);	
+}
+
+// int		op_lfork(t_vm *vm, t_process *proc)
+// {
+// }
+
+// int		op_aff(t_vm *vm, t_process *proc)
+// {
+// }

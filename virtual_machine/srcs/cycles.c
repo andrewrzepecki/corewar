@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/18 17:58:15 by eviana            #+#    #+#             */
-/*   Updated: 2019/10/22 20:18:20 by eviana           ###   ########.fr       */
+/*   Updated: 2019/10/31 20:16:36 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,27 @@
 
 int     op_dispatch(t_vm *vm, t_process *proc, int op_code)
 {
-	//int     (*op[16])(t_vm*, t_process*);
+	int     (*op[16])(t_vm*, t_process*);
 
-	// op[0] = &op_live;
-	// op[1] = &op_ld;
-	// op[2] = &op_st;
-	// op[3] = &op_add;
-	// op[4] = &op_sub;
-	// op[5] = &op_and;
-	// op[6] = &op_or;
-	// op[7] = &op_xor;
-    // op[8] = &op_zjmp;
-	// op[9] = &op_ldi;
-	// op[10] = &op_sti;
+	op[0] = &op_live;
+	op[1] = &op_ld;
+	op[2] = &op_st;
+	op[3] = &op_add;
+	op[4] = &op_sub;
+	op[5] = &op_and;
+	op[6] = &op_or;
+	op[7] = &op_xor;
+    op[8] = &op_zjmp;
+	op[9] = &op_ldi;
+	op[10] = &op_sti;
 	// op[11] = &op_fork;
-	// op[12] = &op_lld;
-	// op[13] = &op_lldi;
+	op[12] = &op_lld;
+	op[13] = &op_lldi;
 	// op[14] = &op_lfork;
 	// op[15] = &op_aff;
-	//return (op[op_code - 1](vm, proc));
-    ft_printf("cycle %d : opcode %d pour proc %d\n", vm->cycles, op_code, proc->id);
-    return(0);
+	return (op[op_code - 1](vm, proc));
+    //ft_printf("cycle %d : opcode %d pour proc %d\n", vm->cycles, op_code, proc->id);
+    //return(0);
 }
 
 int     is_valid_op(int op_code)
@@ -130,7 +130,7 @@ void    cycles(t_vm *vm)
         if (vm->vis != -1 && !(vm->cycles % vm->vis))
         {
             print_arena(vm);
-            //sleep(10);
+            sleep(1);
         }
         vm->cycles++;
     }

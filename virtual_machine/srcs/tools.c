@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 12:49:41 by andrewrze         #+#    #+#             */
-/*   Updated: 2019/10/22 19:57:26 by eviana           ###   ########.fr       */
+/*   Updated: 2019/10/31 20:23:25 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,12 @@ int			is_valid_reg(int reg)
 	return (0);
 }
 
-int			rel_address(t_process *proc, int add1, int add2)
+int			rel_address(t_process *proc, int add1, int add2) // avec adressage restreint
+{
+	return ((proc->pc + ((add1 + add2) % IDX_MOD)) % MEM_SIZE);
+}
+
+int			long_rel_address(t_process *proc, int add1, int add2) // avec adressage restreint
 {
 	return ((proc->pc + ((add1 + add2) % IDX_MOD)) % MEM_SIZE);
 }
@@ -50,4 +55,20 @@ int			read_bytes(unsigned char *mem, size_t size) // attention a l'overflow
 		bytes++;
 	}
 	return (res);
+}
+
+void		write_to_address(t_vm *vm, t_process *proc, int addr, int to_write)
+{
+	int	bytes;
+	int chunk;
+
+	bytes = 0;
+	while (bytes < 4)
+	{
+		chunk = ft_power(256, (4 - (bytes + 1)));
+		vm->mem[(addr + bytes) % MEM_SIZE] = to_write / chunk;
+		vm->owner[(addr + bytes) % MEM_SIZE] = proc->id;
+		to_write = to_write % chunk;
+		bytes++;
+	}
 }
