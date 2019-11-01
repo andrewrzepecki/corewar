@@ -6,7 +6,7 @@
 #    By: eviana <eviana@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/08/21 15:01:58 by eviana            #+#    #+#              #
-#    Updated: 2019/10/22 18:55:37 by eviana           ###   ########.fr        #
+#    Updated: 2019/11/01 15:21:53 by eviana           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ SRC_PATH	= srcs/
 OBJ_PATH	= objs/
 H_PATH		= ../includes/
 LIB			= ../libft/libft.a
-FLAGS		= -Wall -Werror -Wextra
+FLAGS		= -Wall -Werror -Wextra -g
 CC			= gcc $(FLAGS)
 SRC_SUFFIX	= .c
 H_SUFFIX	= .h

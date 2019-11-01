@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/18 17:58:15 by eviana            #+#    #+#             */
-/*   Updated: 2019/10/31 20:16:36 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/01 20:25:21 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,29 +27,21 @@ int     op_dispatch(t_vm *vm, t_process *proc, int op_code)
     op[8] = &op_zjmp;
 	op[9] = &op_ldi;
 	op[10] = &op_sti;
-	// op[11] = &op_fork;
+	op[11] = &op_fork;
 	op[12] = &op_lld;
 	op[13] = &op_lldi;
 	// op[14] = &op_lfork;
 	// op[15] = &op_aff;
+    ft_printf("cycle %d : opcode %d pour proc %d\n", vm->cycles, op_code, proc->id);
 	return (op[op_code - 1](vm, proc));
-    //ft_printf("cycle %d : opcode %d pour proc %d\n", vm->cycles, op_code, proc->id);
     //return(0);
-}
-
-int     is_valid_op(int op_code)
-{
-    if (op_code <= 0 || op_code > 16)
-        return (0);
-    else
-        return (1);
 }
 
 void    get_cycles_left(t_process *proc)
 {
     if (is_valid_op(proc->current_op))
         proc->cycles_left = g_op_tab[proc->current_op - 1].cycles;
-    else // useless, ici pour la conpréhension
+    else // useless, ici pour la compréhension
         proc->cycles_left = 0;
 }
 
@@ -83,6 +75,7 @@ void    process_review(t_vm *vm)
     t_process   *current;
 
     current = vm->process;
+    //ft_printf("Process review 1, addresse vm->process : %p\n", vm->process);
     while (current)
     {
         if (!current->cycles_left)
@@ -91,6 +84,7 @@ void    process_review(t_vm *vm)
             current->cycles_left--;
         current = current->next;
     }
+    //ft_printf("Process review 2, addresse vm->process : %p\n", vm->process);
 }
 
 int    life_check(t_vm *vm)
@@ -126,7 +120,7 @@ void    cycles(t_vm *vm)
         }
         ft_printf("Cycle : %d\n", vm->cycles);
         process_review(vm);
-        ft_printf("Review faite\n");
+        //ft_printf("Review faite\n");
         if (vm->vis != -1 && !(vm->cycles % vm->vis))
         {
             print_arena(vm);

@@ -6,13 +6,13 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/19 16:37:07 by andrewrze         #+#    #+#             */
-/*   Updated: 2019/10/22 14:39:48 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/01 20:18:50 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "virtual_machine.h"
 
-t_process         *load_process_from_player(t_player player)
+t_process   *load_process_from_player(t_player player)
 {
     t_process *process;
 
@@ -25,9 +25,9 @@ t_process         *load_process_from_player(t_player player)
     process->cycles_left = g_op_tab[process->current_op - 1].cycles;
     process->pc = player.init_pc;
     //process->next_op = get_next_op(process->id); // Je pense que ce n'est pas utile a ce stade
-    process->reg[0] = process->id; // a verifier si mettre celui du joueur ou du process
+    init_registers(process);
     process->next = NULL;
-    ft_bzero(process->reg + 4, (REG_NUMBER - 1) * 4);
+    //ft_bzero(process->reg + 4, (REG_NUMBER - 1) * 4); // Initialisation a 0 est faite dans set_registers
     return (process);
 }
 
@@ -62,5 +62,6 @@ int        load_process_list(t_vm *vm)
         place_process(&(vm->process), proc);
         i++;
     }
+    vm->nb_proc = vm->nb_players;
     return (0);
 }

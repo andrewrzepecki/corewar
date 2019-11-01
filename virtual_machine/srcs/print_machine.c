@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/17 13:27:25 by eviana            #+#    #+#             */
-/*   Updated: 2019/10/21 20:36:13 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/01 19:01:28 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,38 @@ void    print_war(int line)
         ft_printf("                                                 {red}'{eoc}");
 }
 
+void    print_regs(t_vm *vm, int line)
+{
+    int i;
+    t_process *proc;
+
+    proc = vm->process;
+    while (proc->id != 1)
+        proc = proc->next;
+    if (line == 17)
+    {
+        i = 1;
+        pannel_line("Proc regs : ");
+        while (i < 9)
+        {
+            ft_printf("[%d]", proc->reg[i]);
+            i++;
+        }
+        ft_printf("\n");
+    }
+    else if (line == 18)
+    {
+        i = 9;
+        pannel_line("Proc regs : ");
+        while (i < 17)
+        {
+            ft_printf("[%d]", proc->reg[i]);
+            i++;
+        }
+        ft_printf("\n");
+    }
+}
+
 void    print_pannel(t_vm *vm, int line)
 {
     ft_printf("{eoc}     |");
@@ -82,6 +114,7 @@ void    print_pannel(t_vm *vm, int line)
     else if (line == 9 || line == 15)
         ft_printf("-----------------------------------------------------------------");
     ft_printf("\n");
+    //print_regs(vm, line);
 }
 
 void    debug_lines(t_vm *vm)
@@ -92,7 +125,7 @@ void    debug_lines(t_vm *vm)
     ft_printf("\nDEBUG :\n");
     while (current)
     {
-        ft_printf("Proc %d pc : %d\n", current->id, current->pc);
+        ft_printf("Proc %d pc : %d | current op : %d\n", current->id, current->pc, current->current_op);
         current = current->next;
     }
 }

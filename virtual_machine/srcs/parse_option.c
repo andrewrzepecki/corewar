@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 21:15:46 by andrewrze         #+#    #+#             */
-/*   Updated: 2019/10/17 16:56:01 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/01 19:14:40 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,23 +26,6 @@ int     visualizer_option(t_vm *vm, char **av, int *i)
                 return (OH_OUI);
     }
     return (VIS_ERROR);
-}
-
-int     check_player_numbers(t_vm *vm, int player_nb)
-{
-    int     i;
-
-    i = 0;
-    while (i < vm->nb_players)
-    {
-        if (vm->player[player_nb].id == vm->player[i].id && i != player_nb)
-        {
-            vm->player[i].id++;
-            return (check_player_numbers(vm, i));
-        }
-        i++;
-    }
-    return (0);
 }
 
 int     number_option(t_vm *vm, char **av, int *i)

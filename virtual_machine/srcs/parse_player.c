@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 22:56:27 by andrewrze         #+#    #+#             */
-/*   Updated: 2019/10/21 17:36:44 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/01 19:14:59 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,23 @@ int     parse_exec(int fd, t_vm *vm)
     return (0);
 }
 
+int     check_player_numbers(t_vm *vm, int player_nb)
+{
+    int     i;
+
+    i = 0;
+    while (i < vm->nb_players)
+    {
+        if (vm->player[player_nb].id == vm->player[i].id && i != player_nb)
+        {
+            vm->player[i].id++;
+            return (check_player_numbers(vm, i));
+        }
+        i++;
+    }
+    return (0);
+}
+
 int     parse_player(t_vm *vm, char **av, int i)
 {
     int fd;
@@ -57,4 +74,3 @@ int     parse_player(t_vm *vm, char **av, int i)
         vm->player[vm->nb_players - 1].id = vm->nb_players;
     return (check_player_numbers(vm, vm->nb_players));
 }
-

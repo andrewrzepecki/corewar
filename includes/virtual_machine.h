@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 13:56:35 by anrzepec          #+#    #+#             */
-/*   Updated: 2019/10/31 20:23:43 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/01 20:25:54 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,13 +101,14 @@ typedef	struct			s_vm
 	unsigned char		mem[MEM_SIZE];
 	unsigned char		owner[MEM_SIZE];
 	t_player			player[MAX_PLAYERS];
-	t_process     		*process; //**
+	t_process     		*process;		// anciennement **process
 	t_player			*last_live; 	/* addresse du joueur ayant appele 'live' en dernier */
 	int					cycles;
 	int					nb_lives;  		/* nombre de 'live' durant chaque cycle_to_die */
 	int					cycles_to_die;  /* = CYCLES_TO_DIE || cycles avant ??verifications?? */
 	int					nb_checks; 		/* ?? */
 	int					last_verif;		/* cycle de la dernière verification des process en vie */
+	int					nb_proc;
 }						t_vm;
 
 typedef struct    s_param
@@ -132,6 +133,7 @@ int 	load_process_list(t_vm *vm);
 */
 int		parse_option(t_vm *vm, char **av, int *i);
 int		parse_player(t_vm *vm, char **av, int i);
+int     check_player_numbers(t_vm *vm, int player_nb);
 
 /*
 ** Runtime
@@ -153,19 +155,21 @@ int		op_xor(t_vm *vm, t_process *proc);
 int		op_zjmp(t_vm *vm, t_process *proc);
 int		op_ldi(t_vm *vm, t_process *proc);
 int		op_sti(t_vm *vm, t_process *proc);
-
+int		op_fork(t_vm *vm, t_process *proc);
 int		op_lld(t_vm *vm, t_process *proc);
 int		op_lldi(t_vm *vm, t_process *proc);
 
 /*
 ** Tools
 */
+int		is_valid_op(int opcode);
+int		is_valid_reg(int reg);
+void    init_registers(t_process *process);
+void    copy_registers(t_process *new, t_process *proc);
 int		rel_address(t_process *proc, int add1, int add2);
 int		long_rel_address(t_process *proc, int add1, int add2);
-int		read_address(t_vm *vm, int pc, size_t bytes);
+int		read_address(t_vm *vm, int addr, size_t bytes);
 int		read_bytes(unsigned char *mem, size_t size);
-int     check_player_numbers(t_vm *vm, int player_nb);
-int		is_valid_reg(int reg);
 void	write_to_address(t_vm *vm, t_process *proc, int addr, int to_write);
 
 /*
