@@ -6,16 +6,26 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 18:33:09 by eviana            #+#    #+#             */
-/*   Updated: 2019/11/13 17:35:48 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/13 21:36:42 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "virtual_machine.h"
 
-int			check_ocp(char ocp)
+int			check_ocp(t_process *proc, char ocp, int *offset) // A FINIR
 {
+	int i;
+	int param;
+
+	i = 0;
 	if ((ocp & 1) || (ocp >> 1) & 1)
 		return (0); // OCP incorrect
+	while (i < g_op_tab[proc->current_op - 1].params)
+	{
+		param = ocp >> (6 - (2 * i));
+		//if (param )
+		i++;	
+	}
 	return (1);
 }
 
@@ -77,9 +87,13 @@ t_param		set_params(t_vm *vm, t_process *proc, int pc, int *offset) // opti avec
 	ocp = vm->mem[(pc + 1) % MEM_SIZE];
 	pc = (pc + 2) % MEM_SIZE;
 	*offset = 2; // 1 + 1 : on passera l'opcode puis l'ocp
-	check_ocp(ocp); // Faire une action si nul : perror ?
-	dir_size = (g_op_tab[proc->current_op - 1].dir_size ? 2 : 4);
 	params.valid = 1;
+	if (!check_ocp(proc, ocp, offset)) // ATTENTION : A VOIR
+	{
+		params.valid = 0; // Faire une action si nul : perror ?
+		return (params);
+	}
+	dir_size = (g_op_tab[proc->current_op - 1].dir_size ? 2 : 4);
 	while (i < 3)
 	{
 		//ocp = ocp >> 2; // ocp >> (6 - (2 * i))

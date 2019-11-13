@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 12:49:41 by andrewrze         #+#    #+#             */
-/*   Updated: 2019/11/13 17:44:50 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/13 19:33:27 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,13 @@ int			is_valid_reg(int reg)
 	return (0);
 }
 
-void        init_registers(t_process *process)
+void        init_registers(t_process *process, t_player player)
 {
     int i;
 
     i = 2;
-    process->reg[1] = process->id; // a verifier si on doit mettre celui du joueur ou celui du process 
+	process->reg[0] = 0; // par securité mais il n'y a rien a cette valeur
+    process->reg[1] = player.id;
     while (i < 17)
     {
         process->reg[i] = 0;
@@ -45,6 +46,7 @@ void        copy_registers(t_process *new, t_process *proc)
     int i;
 
     i = 1;
+	new->reg[0] = 0;
     while (i < 17)
     {
         new->reg[i] = proc->reg[i];

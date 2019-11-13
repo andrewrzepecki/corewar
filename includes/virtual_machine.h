@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 13:56:35 by anrzepec          #+#    #+#             */
-/*   Updated: 2019/11/13 17:53:00 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/13 20:12:58 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ typedef struct 			s_op
 }						t_op;
 
 /*
-Structures basees sur le cookcook du russe/Ukrainien 
+Structures basees sur le cookbook du russe/Ukrainien 
 */
 
 typedef struct			s_player
@@ -71,15 +71,15 @@ typedef struct			s_player
 
 typedef struct 			s_process
 {
-	int					master;
 	int					id;
+	int					master;
 	int					carry;  
 	int					current_op; 	/* operation a executer */
 	int					last_live;		/* cycle du dernier 'live' */
 	int					cycles_left; 	/* cycles restant avant execution */
 	int					pc;				/* position sur l'arene du cariage */
 	int					next_op; 		/* utile ? nombre d'octets avant prochaine operation */
-	int					reg[REG_NUMBER];/* registres du carriage ??? unique au carriage ou commum pour chaque process */
+	int					reg[REG_NUMBER + 1];/* registres du carriage ??? unique au carriage ou commum pour chaque process */
 	struct s_process	*next;
 }						t_process;
 
@@ -161,13 +161,14 @@ int		op_sti(t_vm *vm, t_process *proc);
 int		op_fork(t_vm *vm, t_process *proc);
 int		op_lld(t_vm *vm, t_process *proc);
 int		op_lldi(t_vm *vm, t_process *proc);
+int		op_lfork(t_vm *vm, t_process *proc);
 
 /*
 ** Tools
 */
 int		is_valid_op(int opcode);
 int		is_valid_reg(int reg);
-void    init_registers(t_process *process);
+void    init_registers(t_process *process, t_player player);
 void    copy_registers(t_process *new, t_process *proc);
 int		rel_address(t_process *proc, int add1, int add2);
 int		long_rel_address(t_process *proc, int add1, int add2);

@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/18 17:58:15 by eviana            #+#    #+#             */
-/*   Updated: 2019/11/13 17:37:21 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/13 20:06:52 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int     op_dispatch(t_vm *vm, t_process *proc, int op_code)
 	op[11] = &op_fork;
 	op[12] = &op_lld;
 	op[13] = &op_lldi;
-	// op[14] = &op_lfork;
+	op[14] = &op_lfork;
 	// op[15] = &op_aff;
     ft_printf("cycle %d : opcode %d pour proc %d\n", vm->cycles, op_code, proc->id);
 	return (op[op_code - 1](vm, proc));
@@ -124,7 +124,13 @@ int     life_check(t_vm *vm)
         current = current->next;
     }
     if (vm->process == NULL || vm->process->next == NULL)
+    {
+        if (vm->process == NULL)
+            ft_printf("TOUT LE MONDE EST MORT\n"); // TEST
+        else
+            ft_printf("LE DERNIER DES MOHICANS EST %d, son maitre est \"%d\"\n", vm->process->id, vm->process->master);
         return (END_GAME);
+    }
     /* garder une valeur de retour pour la condition d'arrêt du while de cycles() ? 
     ** ex : si plus qu'un ou moins en vie, return 0
     */

@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/17 13:27:25 by eviana            #+#    #+#             */
-/*   Updated: 2019/11/13 17:52:29 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/13 19:58:41 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,15 +119,34 @@ void    print_pannel(t_vm *vm, int line)
 
 void    debug_lines(t_vm *vm)
 {
+    int         i;
     t_process   *current;
 
     current = vm->process;
     ft_printf("\nDEBUG :\n");
     while (current)
     {
-        ft_printf("Proc %d pc : %d | current op : %d\n", current->id, current->pc, current->current_op);
+        i = 0;
+        ft_printf("Proc %d(m%d) pc : %d | c_op : %d | c_left : %d | regs : [", current->id, current->master, current->pc, current->current_op, current->cycles_left);
+        while (++i < 17)
+            ft_printf("%d : %d | ", i, current->reg[i]);
+        ft_printf("]\n");
         current = current->next;
     }
+}
+
+void    print_col_numbers(void)
+{
+    int i;
+
+    i = 0;
+    ft_printf("Col nb : ");
+    while (i < 64) // A VIRER, PRINT LA PREMIERE LIGNE NUMEROTE
+    {
+        ft_printf("%02d ", i);
+        i++;
+    }
+    ft_printf("     |\n");
 }
 
 int     print_arena(t_vm *vm)
@@ -136,8 +155,9 @@ int     print_arena(t_vm *vm)
     int             lines;
 
     i = 0;
-    ft_printf("\e[1;1H\e[2J");
+    ft_printf("\e[1;1H\e[2J"); // Pour clear le board
     //ft_printf("\033[2J\033[1;1H");
+    print_col_numbers();
     lines = ft_sqrt(MEM_SIZE);
     while (i < MEM_SIZE)
     {
