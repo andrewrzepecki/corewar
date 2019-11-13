@@ -33,6 +33,7 @@
 # define SIZE_ERROR				11
 # define ALLOC_ERROR			12
 # define VIS_ERROR				13
+# define END_GAME				14
 
 /* 
 ** COLORS
@@ -70,6 +71,7 @@ typedef struct			s_player
 
 typedef struct 			s_process
 {
+	int					master;
 	int					id;
 	int					carry;  
 	int					current_op; 	/* operation a executer */
@@ -109,6 +111,7 @@ typedef	struct			s_vm
 	int					nb_checks; 		/* ?? */
 	int					last_verif;		/* cycle de la dernière verification des process en vie */
 	int					nb_proc;
+	int					lives_since_check;
 }						t_vm;
 
 typedef struct    s_param
@@ -138,7 +141,7 @@ int     check_player_numbers(t_vm *vm, int player_nb);
 /*
 ** Runtime
 */
-void	cycles(t_vm *vm);
+int		cycles(t_vm *vm);
 t_param	set_params(t_vm *vm, t_process *proc, int pc, int *offset);
 
 /*
