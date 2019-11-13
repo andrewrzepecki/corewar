@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 12:49:41 by andrewrze         #+#    #+#             */
-/*   Updated: 2019/11/01 20:23:09 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/13 17:44:50 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ void		write_to_address(t_vm *vm, t_process *proc, int addr, int to_write)
 	{
 		chunk = ft_power(256, (4 - (bytes + 1)));
 		vm->mem[(addr + bytes) % MEM_SIZE] = to_write / chunk;
-		vm->owner[(addr + bytes) % MEM_SIZE] = proc->id;
+		vm->owner[(addr + bytes) % MEM_SIZE] = proc->master;
 		to_write = to_write % chunk;
 		bytes++;
 	}

@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/22 14:40:47 by eviana            #+#    #+#             */
-/*   Updated: 2019/11/01 20:25:35 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/13 17:51:13 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ int		op_live(t_vm *vm, t_process *proc)
 	{
 		ft_printf("Player %s (%d) is alive!\n", vm->player[id].name, id);
 		vm->player[id].last_live = vm->cycles;
+		//vm->last_live = &vm->player[id]; // segfault
 		proc->last_live = vm->cycles;
 	}
 	else
@@ -45,7 +46,7 @@ int		op_ld(t_vm *vm, t_process *proc)
 		if (params.c[0] == IND_CODE)
 			params.n[0] = read_address(vm, params.n[0], 4);
 		proc->reg[params.n[1]] = params.n[0];
-		if (proc->reg[params.n[0]] == 0)
+		if (proc->reg[params.n[1]] == 0)
 			proc->carry = 1;
 		else
 			proc->carry = 0;
@@ -254,7 +255,8 @@ int		op_fork(t_vm *vm, t_process *proc) // WORK IN PROGRESS
 	else
 		new->cycles_left = 0; // ou 1 ?
     new->reg[0] = new->id; // a verifier si on doit mettre l'id du joueur ou celui du process
-    new->next = vm->process; // On push au debut de la file de process (revoir porentiellement comment on initialise la file de process)
+	new->master = proc->master;
+	new->next = vm->process; // On push au debut de la file de process (revoir porentiellement comment on initialise la file de process)
 	vm->process = new;
 	return (3); // on sautera l'opcode + le D2;
 }

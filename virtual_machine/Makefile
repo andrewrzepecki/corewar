@@ -6,17 +6,25 @@
 #    By: eviana <eviana@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/08/21 15:01:58 by eviana            #+#    #+#              #
-#    Updated: 2019/11/13 10:42:59 by anrzepec         ###   ########.fr        #
+#    Updated: 2019/11/13 16:49:06 by eviana           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME    	= corewar
+DEBUG		= 0
 SRC_PATH	= srcs/
 OBJ_PATH	= objs/
 H_PATH		= ../includes/
 LIB			= ../libft/libft.a
 FLAGS		= -Wall -Werror -Wextra -g
-CC			= gcc $(FLAGS)
+DEBUG_FLAG 	= -g3 -fsanitize=address
+
+ifeq ($(DEBUG), 0)
+	CC = gcc $(FLAGS)
+else
+	CC = gcc $(FLAGS) $(DEBUG_FLAG)
+endif
+
 SRC_SUFFIX	= .c
 H_SUFFIX	= .h
 COMMON		= main \
@@ -30,7 +38,7 @@ COMMON		= main \
 			error \
 			op \
 			operations \
-			params
+			params 
 INCLUDES	= virtual_machine \
 			op \
 			libft \

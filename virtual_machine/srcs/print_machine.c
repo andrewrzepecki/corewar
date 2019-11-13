@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/17 13:27:25 by eviana            #+#    #+#             */
-/*   Updated: 2019/11/01 19:01:28 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/13 17:52:29 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ void    print_pannel(t_vm *vm, int line)
     else if (line == 12)
     {
         pannel_line("last alive : ");
-        ft_printf("%s (%d)", vm->player[0].name, vm->player[0].id);
+        //ft_printf("%s (%d)", vm->last_live->name, vm->last_live->id); // BESOIN IMPLEMENTATION AVANT
     }
     else if (line == 13)
     {

@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/18 17:58:15 by eviana            #+#    #+#             */
-/*   Updated: 2019/11/01 20:25:21 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/13 17:37:21 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ int     life_check(t_vm *vm)
         prec = current;
         current = current->next;
     }
-    if (vm->process == NULL)
+    if (vm->process == NULL || vm->process->next == NULL)
         return (END_GAME);
     /* garder une valeur de retour pour la condition d'arrêt du while de cycles() ? 
     ** ex : si plus qu'un ou moins en vie, return 0
