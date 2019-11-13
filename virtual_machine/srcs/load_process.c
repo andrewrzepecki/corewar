@@ -18,7 +18,7 @@ t_process   *load_process_from_player(t_player player)
 
     if (!(process = (t_process*)malloc(sizeof(t_process))))
         return (NULL);
-    process->id = player.id;
+    process->master = player.id;
     process->carry = 0;
     process->last_live = 0;
     process->current_op = player.exec[0];
@@ -31,17 +31,18 @@ t_process   *load_process_from_player(t_player player)
     return (process);
 }
 
-void        place_process(t_process **lst, t_process *proc)
+void        place_process(t_process **lst, t_process *proc, int i)
 {
     t_process *tmp;
     t_process *tracer;
 
+    proc->id = i;
     tracer = *lst;
     if (!*lst)
         *lst = proc;
     else
     {
-        while (tracer->next && tracer->next->id > proc->id)
+        while (tracer->next && tracer->next->master > proc->master)
             tracer = tracer->next;
         tmp = tracer->next;
         tracer->next = proc;
@@ -59,7 +60,7 @@ int        load_process_list(t_vm *vm)
     {
         if (!(proc = load_process_from_player(vm->player[i])))
             return (ALLOC_ERROR);
-        place_process(&(vm->process), proc);
+        place_process(&(vm->process), proc, i);
         i++;
     }
     vm->nb_proc = vm->nb_players;

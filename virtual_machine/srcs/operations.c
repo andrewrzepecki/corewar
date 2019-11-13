@@ -30,6 +30,7 @@ int		op_live(t_vm *vm, t_process *proc)
 	}
 	else
 		ft_printf("Player with id %d doesn't exist: error\n", id);
+	vm->lives_since_check++;
 	return (5); // on passe l'op_code et le dir(4);
 }
 
@@ -245,7 +246,7 @@ int		op_fork(t_vm *vm, t_process *proc) // WORK IN PROGRESS
         return (-1); // comment gerer une erreur de malloc ici ? return (put_error() qui free le tout ?);
 	new->id = ++vm->nb_proc; // comment on gere les id de process ?
     new->carry = proc->carry;
-    new->last_live = vm->cycles; // On met le cycle courrant ?
+    new->last_live = vm->cycles; // On met le cycle courant ?
     new->pc = read_address(vm, (proc->pc + 1) % MEM_SIZE, 2);
     new->current_op = vm->mem[new->pc];
 	if (is_valid_op(new->current_op))
@@ -300,9 +301,31 @@ int		op_lldi(t_vm *vm, t_process *proc)
 	return (offset);	
 }
 
-// int		op_lfork(t_vm *vm, t_process *proc)
-// {
-// }
+int		op_lfork(t_vm *vm, t_process *proc)
+{
+	t_process *new;
+
+	read_address(vm, (proc->pc + 1) % MEM_SIZE, 2);
+	if (!(new = (t_process*)malloc(sizeof(t_process))))
+	{
+		//vm->error = MALLOC
+		return (-1);
+	}
+	new->id = ++vm->nb_proc; // comment on gere les id de process ?
+    new->carry = proc->carry;
+    new->last_live = vm->cycles; // On met le cycle courrant ?
+    new->pc = read_address(vm, (proc->pc + 1) % MEM_SIZE, 2);
+    new->current_op = vm->mem[new->pc];
+	if (is_valid_op(new->current_op))
+    	new->cycles_left = g_op_tab[new->current_op - 1].cycles;
+	else
+		new->cycles_left = 0; // ou 1 ?
+    new->reg[0] = new->id; // a verifier si on doit mettre l'id du joueur ou celui du process
+    new->next = vm->process; // On push au debut de la file de process (revoir porentiellement comment on initialise la file de process)
+	vm->process = new;
+	return (3); // on sautera l'opcode + le D2;
+
+}
 
 // int		op_aff(t_vm *vm, t_process *proc)
 // {

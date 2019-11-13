@@ -55,19 +55,19 @@ void    update_process(t_vm *vm, t_process *proc)
 {
     int offset;
     
-    if (!is_valid_op(proc->current_op)) // si opcode invalide on avance d'un et on laisse le cycle_left à 0
+    if (proc->current_op != vm->mem[proc->pc]) // si on a changé d'opcode durant les cycles d'attentes : on prend le nouvel op code et on reset l'attente !
+        set_current_op(vm, proc);
+    else if (!is_valid_op(proc->current_op)) // si opcode invalide on avance d'un et on laisse le cycle_left à 0
     {
         proc->pc = (proc->pc + 1) % MEM_SIZE;
         set_current_op(vm, proc);
     }
-    else if (proc->current_op == vm->mem[proc->pc]) // si on voit toujours le meme opcode valide que celui enregistré on avance en fonctions des operations
+    else // si on voit toujours le meme opcode valide que celui enregistré on avance en fonctions des operations
     {
         offset = op_dispatch(vm, proc, proc->current_op); // les operations doivent retourner l'offset même si les params sont invalides
         proc->pc = (proc->pc + offset) % MEM_SIZE;
         set_current_op(vm, proc);
     }
-    else // si on a changé d'opcode durant les cycles d'attentes et qu'il est valide, on prend le nouvel op code et on reset l'attente ?
-        set_current_op(vm, proc);
 }
 
 void    process_review(t_vm *vm)
@@ -78,45 +78,76 @@ void    process_review(t_vm *vm)
     //ft_printf("Process review 1, addresse vm->process : %p\n", vm->process);
     while (current)
     {
-        if (!current->cycles_left)
+        if (!current->cycles_left || current->current_op != vm->mem[current->pc])
             update_process(vm, current);
-        else // doit-on aussi checker la validité de l'opcode ici ?
+        else
             current->cycles_left--;
         current = current->next;
     }
     //ft_printf("Process review 2, addresse vm->process : %p\n", vm->process);
 }
 
-int    life_check(t_vm *vm)
+t_process   *list_pop(t_vm *vm)
+{
+    t_process   *first;
+
+    first = vm->process;
+    vm->process = vm->process->next;
+    free(first);
+    return (vm->process);
+}
+
+t_process   *list_delone(t_process *prec, t_process *current)
+{
+    prec->next = current->next;
+    free(current);
+    return (prec);
+}
+
+int     life_check(t_vm *vm)
 {
     t_process   *current;
+    t_process   *prec;
 
     current = vm->process;
+    prec = vm->process;
     while (current)
     {
-        // if toujours en vie => process continue
-        // if pas de vie, retirer de la liste des process
+        if (current->last_live <= vm->last_verif)
+        {
+            if (current == vm->process)
+                current = list_pop(vm);
+            else
+                current = list_delone(prec, current);
+        }
+        prec = current;
         current = current->next;
     }
+    if (vm->process == NULL)
+        return (END_GAME);
     /* garder une valeur de retour pour la condition d'arrêt du while de cycles() ? 
     ** ex : si plus qu'un ou moins en vie, return 0
     */
-    return (1);
+    return (0);
 }
 
-void    cycles(t_vm *vm)
+int    cycles(t_vm *vm)
 {
     while (1) // trouver condition d'arrêt, quand il ne reste plus qu'un joueur en vie ?
     {
-        if (vm->cycles != 0 && !((vm->cycles - vm->last_verif) % CYCLE_TO_DIE) || CYCLE_TO_DIE <= 0) // à changer pour prendre en compte l'évolution de cycles_to_die
+       // if (cycles_check(vm))
+       //     return(END_GAME);
+        if ((vm->cycles != 0 && !((vm->cycles - vm->last_verif) % vm->cycles_to_die)) || vm->cycles_to_die <= 0) // à changer pour prendre en compte l'évolution de cycles_to_die
         {
-            if ((vm->nb_lives = life_check(vm) >= NBR_LIVE)
-                || (++(vm->nb_checks) == MAX_CHECKS))
+            if (life_check(vm) == END_GAME) // sortie si tous mort ?
+                return (END_GAME);
+            if (++(vm->nb_checks) == MAX_CHECKS || vm->lives_since_check >= NBR_LIVE)
             {
                 vm->cycles_to_die -= CYCLE_DELTA;
                 vm->nb_checks = 0;
             }
             vm->last_verif = vm->cycles;
+            vm->lives_since_check = 0;
         }
         ft_printf("Cycle : %d\n", vm->cycles);
         process_review(vm);
@@ -128,4 +159,5 @@ void    cycles(t_vm *vm)
         }
         vm->cycles++;
     }
+    return (END_GAME); // ?
 }

@@ -61,6 +61,7 @@ t_vm 	*init_vm(int ac)
 	vm->cycles_to_die = CYCLE_TO_DIE;
 	vm->nb_checks = 0;
 	vm->last_verif = 0; // NEW ! usefull ?
+	vm->lives_since_check = 0;
 	init_players(vm);
 	return (vm);
 }
