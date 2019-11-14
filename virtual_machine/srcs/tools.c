@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 12:49:41 by andrewrze         #+#    #+#             */
-/*   Updated: 2019/11/14 16:15:27 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/14 16:26:03 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int		vegetable_garden(t_process *proc, int addr)
 	restr_addr = addr % IDX_MOD;
 	// ft_printf("restr_addr = %d\n", restr_addr);
 	if (restr_addr > IDX_MOD / 2)
-		restr_addr = - (IDX_MOD / 2) + (restr_addr - (IDX_MOD / 2));
+		restr_addr = - IDX_MOD + restr_addr;
 	new_addr = proc->pc + restr_addr;
 	if (new_addr < 0)
 		new_addr = MEM_SIZE + new_addr;
