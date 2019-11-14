@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/22 14:40:47 by eviana            #+#    #+#             */
-/*   Updated: 2019/11/14 16:54:08 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/14 17:49:23 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,13 @@ int		op_live(t_vm *vm, t_process *proc)
 	id = read_address(vm, (proc->pc + 1) % MEM_SIZE, 4);
 	if (id > 0 && id < vm->nb_players) // a voir si concordant avec notre traitement des ids // sinon faire une fonction is_valid_player()
 	{
-		ft_printf("Player %s (%d) is alive!\n", vm->player[id].name, id);
+		//ft_printf("Player %s (%d) is alive!\n", vm->player[id].name, id);
 		vm->player[id].last_live = vm->cycles;
 		//vm->last_live = &vm->player[id]; // segfault
 		proc->last_live = vm->cycles;
 	}
-	else
-		ft_printf("Player with id %d doesn't exist: error\n", id);
+	//else
+		//ft_printf("Player with id %d doesn't exist: error\n", id);
 	vm->lives_since_check++;
 	return (5); // on passe l'op_code et le dir(4);
 }
@@ -354,6 +354,10 @@ int		op_lfork(t_vm *vm, t_process *proc) // WORK IN PROGRESS
 	return (3); // on sautera l'opcode + le D2;
 }
 
-// int		op_aff(t_vm *vm, t_process *proc)
-// {
-// }
+int		op_aff(t_vm *vm, t_process *proc) // todo
+{
+	(void)vm;
+	(void)proc;
+	ft_printf("J'affiche !\n");
+	return (2);
+}

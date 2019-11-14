@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/18 17:58:15 by eviana            #+#    #+#             */
-/*   Updated: 2019/11/13 20:06:52 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/14 17:46:59 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ int     op_dispatch(t_vm *vm, t_process *proc, int op_code)
 	op[12] = &op_lld;
 	op[13] = &op_lldi;
 	op[14] = &op_lfork;
-	// op[15] = &op_aff;
-    ft_printf("cycle %d : opcode %d pour proc %d\n", vm->cycles, op_code, proc->id);
+	op[15] = &op_aff;
+    //ft_printf("cycle %d : opcode %d pour proc %d\n", vm->cycles, op_code, proc->id);
 	return (op[op_code - 1](vm, proc));
     //return(0);
 }
