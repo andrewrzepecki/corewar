@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 18:33:09 by eviana            #+#    #+#             */
-/*   Updated: 2019/11/14 11:50:24 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/14 16:13:51 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,26 @@ int			get_param(t_vm *vm, t_process *proc, int pc, int code)
 	else if (code == IND_CODE)
 	{
 		if (g_op_tab[proc->current_op - 1].restr)
-			return ((proc->pc + (read_address(vm, pc, 2) % IDX_MOD)) % MEM_SIZE);
+		{
+			// ft_printf("coef = %d\n", coef);
+			// ft_printf("IDX_MOD / 2 = %d\n", IDX_MOD / 2);
+			// ft_printf("(coef %% ((IDX_MOD / 2) + coef)) : %d\n", coef % ((IDX_MOD / 2) + coef));
+			// ft_printf("(coef %% (IDX_MOD / 2)) : %d\n", coef % (IDX_MOD / 2));
+			// exit(0);
+			// if (proc->id == 1)
+			// {
+			// 	idx = read_address(vm,pc, 2) % IDX_MOD;
+			// 	ft_printf("proc->pc = %d\n", proc->pc);
+			// 	ft_printf("(read_address(vm, pc, 2) = %d\n", read_address(vm, pc, 2));
+			// 	ft_printf("proc->pc + (read_address(vm, pc, 2) %% IDX_MOD)) %% MEM_SIZE = %d\n", ((proc->pc + read_address(vm, pc, 2)) % (IDX_MOD + proc->pc + read_address(vm, pc, 2))) % MEM_SIZE);
+			// 	exit(0);
+			// }
+			// return ((proc->pc + (read_address(vm, pc, 2) % IDX_MOD)) % MEM_SIZE);
+			// return (((proc->pc + read_address(vm, pc, 2)) % IDX_MOD) % MEM_SIZE);
+			return (vegetable_garden(proc, read_address(vm, pc, 2)));
+			//return ((coef % ((IDX_MOD / 2) + proc->pc)) % MEM_SIZE);
+			//return (coef % MEM_SIZE);
+		}
 		else
 			return ((proc->pc + read_address(vm, pc, 2)) % MEM_SIZE);
 	}

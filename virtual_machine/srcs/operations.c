@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/22 14:40:47 by eviana            #+#    #+#             */
-/*   Updated: 2019/11/13 20:25:53 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/14 13:03:03 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ int		op_st(t_vm *vm, t_process *proc)
 	int		offset;
 
 	params = set_params(vm, proc, proc->pc, &offset);
+	// param_dump(params);
 	if (params.valid) // anciennement : if (is_valid_reg(params.n[0]))
 	{
 		if (params.c[1] == IND_CODE)

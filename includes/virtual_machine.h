@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 13:56:35 by anrzepec          #+#    #+#             */
-/*   Updated: 2019/11/13 20:12:58 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/14 16:14:04 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,6 +166,7 @@ int		op_lfork(t_vm *vm, t_process *proc);
 /*
 ** Tools
 */
+void	param_dump(t_param params);
 int		is_valid_op(int opcode);
 int		is_valid_reg(int reg);
 void    init_registers(t_process *process, t_player player);
@@ -175,6 +176,7 @@ int		long_rel_address(t_process *proc, int add1, int add2);
 int		read_address(t_vm *vm, int addr, size_t bytes);
 int		read_bytes(unsigned char *mem, size_t size);
 void	write_to_address(t_vm *vm, t_process *proc, int addr, int to_write);
+int		vegetable_garden(t_process *proc, int pc);
 
 /*
 ** Error management
