@@ -12,18 +12,31 @@
 
 #include "virtual_machine.h"
 
-int			check_ocp(t_process *proc, char ocp, int *offset) // A FINIR
+int			get_t_code(char ocp)
+{
+	if ((ocp & 1) && ((ocp >> 1) & 1))
+		return (T_IND);
+	else if ((ocp >> 1) & 1)
+		return (T_DIR);
+	else if (ocp & 1)
+		return (REG_CODE);
+	else
+		return (0);
+}
+
+int			check_ocp(t_process *proc, char ocp) // A FINIR
 {
 	int i;
 	int param;
 
 	i = 0;
 	if ((ocp & 1) || (ocp >> 1) & 1)
-		return (0); // OCP incorrect
+		return (0);
 	while (i < g_op_tab[proc->current_op - 1].params)
 	{
 		param = ocp >> (6 - (2 * i));
-		//if (param )
+		if (!(get_t_code(param) & g_op_tab[proc->current_op - 1].type[i]))
+			return (0);
 		i++;	
 	}
 	return (1);
@@ -88,11 +101,8 @@ t_param		set_params(t_vm *vm, t_process *proc, int pc, int *offset) // opti avec
 	pc = (pc + 2) % MEM_SIZE;
 	*offset = 2; // 1 + 1 : on passera l'opcode puis l'ocp
 	params.valid = 1;
-	if (!check_ocp(proc, ocp, offset)) // ATTENTION : A VOIR
-	{
+	if (!check_ocp(proc, ocp)) // ATTENTION : A VOIR
 		params.valid = 0; // Faire une action si nul : perror ?
-		return (params);
-	}
 	dir_size = (g_op_tab[proc->current_op - 1].dir_size ? 2 : 4);
 	while (i < 3)
 	{

@@ -82,9 +82,9 @@ int		op_add(t_vm *vm, t_process *proc)
 	params = set_params(vm, proc, proc->pc, &offset);
 	if (params.valid)
 	{
-		ft_printf("params.n[0] : %d\n", params.n[0]); // TEST
-		ft_printf("params.n[1] : %d\n", params.n[1]); // TEST
-		ft_printf("params.n[2] : %d\n", params.n[2]); // TEST
+		//ft_printf("params.n[0] : %d\n", params.n[0]); // TEST
+		//ft_printf("params.n[1] : %d\n", params.n[1]); // TEST
+		//ft_printf("params.n[2] : %d\n", params.n[2]); // TEST
 		//printf("Problem = %d\n", proc->reg[params.n[0]] + proc->reg[params.n[1]]); // TEST TEST TEST A VIRER
 		proc->reg[params.n[2]] = proc->reg[params.n[0]] + proc->reg[params.n[1]]; // et si il y a overflow, si l'addition depasse un int ?
 		if (proc->reg[params.n[2]] == 0)
