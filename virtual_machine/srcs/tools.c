@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 12:49:41 by andrewrze         #+#    #+#             */
-/*   Updated: 2019/11/15 14:22:15 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/15 18:31:17 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,12 @@ int		vegetable_garden(t_process *proc, int addr)
 	int	new_addr;
 
 	restr_addr = addr % IDX_MOD;
-	// ft_printf("restr_addr = %d\n", restr_addr);
-	if (restr_addr > IDX_MOD / 2)
+	if (restr_addr > IDX_MOD / 2) // TEST EN COURS
 		restr_addr = - IDX_MOD + restr_addr;
+	
 	new_addr = (proc->pc + restr_addr) % MEM_SIZE;
 	if (new_addr < 0)
 		new_addr = MEM_SIZE + new_addr;
-	// ft_printf("new_addr = %d\n", new_addr);
-	// exit(0);
 	return (new_addr);
 }
 
@@ -84,12 +82,6 @@ void        copy_registers(t_process *new, t_process *proc)
         new->reg[i] = proc->reg[i];
         i++;
     }
-}
-
-int			rel_address(t_process *proc, int add1, int add2) // avec adressage restreint
-{
-	return (vegetable_garden(proc, add1 + add2));
-	//return ((proc->pc + ((add1 + add2) % IDX_MOD)) % MEM_SIZE);
 }
 
 int			long_rel_address(t_process *proc, int add1, int add2) // sans adressage restreint

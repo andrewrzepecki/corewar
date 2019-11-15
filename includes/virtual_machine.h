@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 13:56:35 by anrzepec          #+#    #+#             */
-/*   Updated: 2019/11/15 14:17:53 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/15 17:25:22 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,7 +176,7 @@ int		is_valid_op(int opcode);
 int		is_valid_reg(int reg);
 void    init_registers(t_process *process);
 void    copy_registers(t_process *new, t_process *proc);
-int		rel_address(t_process *proc, int add1, int add2);
+// int		rel_address(t_process *proc, int add1, int add2);
 int		long_rel_address(t_process *proc, int add1, int add2);
 int		read_address(t_vm *vm, int addr, size_t bytes);
 int		read_bytes(unsigned char *mem, size_t size);

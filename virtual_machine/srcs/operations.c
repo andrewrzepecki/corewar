@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/22 14:40:47 by eviana            #+#    #+#             */
-/*   Updated: 2019/11/15 15:23:40 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/15 18:23:41 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,15 @@ int		op_st(t_vm *vm, t_process *proc)
 
 	params = set_params(vm, proc, proc->pc, &offset);
 	// param_dump(params);
-	if (params.valid) // anciennement : if (is_valid_reg(params.n[0]))
+	if (params.valid)
 	{
 		if (params.c[1] == IND_CODE)
+		{
+			//params.n[1] = read_address(vm, params.n[1], 4); // NEW NEW NEW !!!
+			//write_to_address(vm, proc, vegetable_garden(proc, params.n[1]), proc->reg[params.n[0]]);
 			write_to_address(vm, proc, params.n[1], proc->reg[params.n[0]]);
-		else
+		}
+		else if (params.c[1] == REG_CODE)
 			proc->reg[params.n[1]] = proc->reg[params.n[0]];
 		// if (proc->reg[params.n[0]] == 0)
 		// 	proc->carry = 1;
@@ -190,8 +194,8 @@ int		op_xor(t_vm *vm, t_process *proc)
 
 int		op_zjmp(t_vm *vm, t_process *proc)
 {
-	if (proc->carry)
-		ft_printf("Jump to: %d %d and pc = %d\n", vm->mem[(proc->pc + 1) % MEM_SIZE], vm->mem[(proc->pc + 2) % MEM_SIZE], proc->pc); // En sortie il faudra appliquer le % MEM_SIZE, on peut le faire en utilisant move_pc
+	// if (proc->carry)
+	// 	ft_printf("Jump to: %d %d and pc = %d\n", vm->mem[(proc->pc + 1) % MEM_SIZE], vm->mem[(proc->pc + 2) % MEM_SIZE], proc->pc); // En sortie il faudra appliquer le % MEM_SIZE, on peut le faire en utilisant move_pc
 	if (proc->carry)
 		return (read_address(vm, (proc->pc + 1) % MEM_SIZE, 2)); // En sortie il faudra appliquer le % MEM_SIZE, on peut le faire en utilisant move_pc
 	else
@@ -212,7 +216,7 @@ int		op_ldi(t_vm *vm, t_process *proc)
 			params.n[0] = read_address(vm, params.n[0], 4);
 		if (params.c[1] == REG_CODE)
 			params.n[1] = proc->reg[params.n[1]];
-		proc->reg[params.n[2]] = read_address(vm, rel_address(proc, params.n[0], params.n[1]), 4);
+		proc->reg[params.n[2]] = read_address(vm, vegetable_garden(proc, params.n[0] + params.n[1]), 4);
 		// if (proc->reg[params.n[2]] == 0)
 		// 	proc->carry = 1;
 		// else
@@ -236,7 +240,7 @@ int		op_sti(t_vm *vm, t_process *proc)
 			params.n[1] = read_address(vm, params.n[1], 4);
 		if (params.c[2] == REG_CODE)
 			params.n[2] = proc->reg[params.n[2]];
-		write_to_address(vm, proc, rel_address(proc, params.n[1], params.n[2]), proc->reg[params.n[0]]);
+		write_to_address(vm, proc, vegetable_garden(proc, params.n[1] + params.n[2]), proc->reg[params.n[0]]);
 		// if (proc->reg[params.n[0]] == 0) // Certains disent non
 		// 	proc->carry = 1;
 		// else
