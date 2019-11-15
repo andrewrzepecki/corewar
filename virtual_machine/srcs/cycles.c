@@ -31,9 +31,9 @@ int     op_dispatch(t_vm *vm, t_process *proc, int op_code)
 	op[12] = &op_lld;
 	op[13] = &op_lldi;
 	op[14] = &op_lfork;
-	op[15] = &op_aff;
+	//op[15] = &op_aff;
     //ft_printf("cycle %d : opcode %d pour proc %d\n", vm->cycles, op_code, proc->id);
-	return (op[op_code - 1](vm, proc));
+    return (op[op_code - 1](vm, proc));
     //return(0);
 }
 
@@ -65,7 +65,7 @@ void    update_process(t_vm *vm, t_process *proc)
     else // si on voit toujours le meme opcode valide que celui enregistré on avance en fonctions des operations
     {
         offset = op_dispatch(vm, proc, proc->current_op); // les operations doivent retourner l'offset même si les params sont invalides
-        proc->pc = (proc->pc + offset) % MEM_SIZE;
+        proc->pc = (proc->pc + (offset % IDX_MOD)) % MEM_SIZE;
         set_current_op(vm, proc);
     }
 }

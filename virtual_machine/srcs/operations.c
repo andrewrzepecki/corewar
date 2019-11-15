@@ -191,6 +191,8 @@ int		op_xor(t_vm *vm, t_process *proc)
 int		op_zjmp(t_vm *vm, t_process *proc)
 {
 	if (proc->carry)
+		ft_printf("Jump to: %d %d and pc = %d\n", vm->mem[(proc->pc + 1) % MEM_SIZE], vm->mem[(proc->pc + 2) % MEM_SIZE], proc->pc); // En sortie il faudra appliquer le % MEM_SIZE, on peut le faire en utilisant move_pc
+	if (proc->carry)
 		return (read_address(vm, (proc->pc + 1) % MEM_SIZE, 2)); // En sortie il faudra appliquer le % MEM_SIZE, on peut le faire en utilisant move_pc
 	else
 		return (3); // 1 + 2 : on passe l'opcode, puis on passe le D2
@@ -253,6 +255,7 @@ int		op_fork(t_vm *vm, t_process *proc) // WORK IN PROGRESS
 	new->master = proc->master;
     new->carry = proc->carry;
     new->last_live = vm->cycles; // On met le cycle courant ?
+	ft_printf("Where to be forked: %d\n", read_address(vm, (proc->pc + 1) % MEM_SIZE, 2));
     new->pc = (proc->pc + (read_address(vm, (proc->pc + 1) % MEM_SIZE, 2) % IDX_MOD)) % MEM_SIZE;
     new->current_op = vm->mem[new->pc];
 	if (is_valid_op(new->current_op))

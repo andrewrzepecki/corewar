@@ -107,7 +107,7 @@ int			read_address(t_vm *vm, int addr, size_t bytes)
 		addr = (addr + 1) % MEM_SIZE;
 		bytes--;
 	}
-	return (res);
+	return (res % MEM_SIZE);
 }
 
 int			read_bytes(unsigned char *mem, size_t size) // attention a l'overflow
