@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/18 17:58:15 by eviana            #+#    #+#             */
-/*   Updated: 2019/11/14 17:46:59 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/15 12:37:09 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void    update_process(t_vm *vm, t_process *proc)
     else // si on voit toujours le meme opcode valide que celui enregistré on avance en fonctions des operations
     {
         offset = op_dispatch(vm, proc, proc->current_op); // les operations doivent retourner l'offset même si les params sont invalides
-        proc->pc = (proc->pc + (offset % IDX_MOD)) % MEM_SIZE;
+        proc->pc = (proc->pc + offset) % MEM_SIZE;
         set_current_op(vm, proc);
     }
 }

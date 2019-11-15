@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 13:56:35 by anrzepec          #+#    #+#             */
-/*   Updated: 2019/11/14 16:14:04 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/15 14:17:53 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,10 @@
 */
 
 # define RED					"{red}"
+
+# define _MAX_INT_				2147483647
+# define _MIN_INT_				-2147483648
+# define _MAX_UNS_INT_			4294967295
 
 typedef struct 			s_op
 {
@@ -162,6 +166,7 @@ int		op_fork(t_vm *vm, t_process *proc);
 int		op_lld(t_vm *vm, t_process *proc);
 int		op_lldi(t_vm *vm, t_process *proc);
 int		op_lfork(t_vm *vm, t_process *proc);
+int		op_aff(t_vm *vm, t_process *proc);
 
 /*
 ** Tools
@@ -169,7 +174,7 @@ int		op_lfork(t_vm *vm, t_process *proc);
 void	param_dump(t_param params);
 int		is_valid_op(int opcode);
 int		is_valid_reg(int reg);
-void    init_registers(t_process *process, t_player player);
+void    init_registers(t_process *process);
 void    copy_registers(t_process *new, t_process *proc);
 int		rel_address(t_process *proc, int add1, int add2);
 int		long_rel_address(t_process *proc, int add1, int add2);

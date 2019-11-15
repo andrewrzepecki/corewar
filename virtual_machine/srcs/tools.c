@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 12:49:41 by andrewrze         #+#    #+#             */
-/*   Updated: 2019/11/14 17:23:18 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/15 14:22:15 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,13 +58,14 @@ int			is_valid_reg(int reg)
 	return (0);
 }
 
-void        init_registers(t_process *process, t_player player)
+void        init_registers(t_process *process)
 {
     int i;
+	static int id = -1;
 
     i = 2;
 	process->reg[0] = 0; // par securité mais il n'y a rien a cette valeur
-    process->reg[1] = MAX_INT - player.id;
+    process->reg[1] = id--;
     while (i < 17)
     {
         process->reg[i] = 0;
@@ -107,7 +108,7 @@ int			read_address(t_vm *vm, int addr, size_t bytes)
 		addr = (addr + 1) % MEM_SIZE;
 		bytes--;
 	}
-	return (res % MEM_SIZE);
+	return (res);
 }
 
 int			read_bytes(unsigned char *mem, size_t size) // attention a l'overflow
@@ -129,14 +130,18 @@ void		write_to_address(t_vm *vm, t_process *proc, int addr, int to_write)
 {
 	int	bytes;
 	int chunk;
+	unsigned to_write_uns;
 
 	bytes = 0;
+	to_write_uns = (unsigned int)to_write;
+	// if (to_write < 0)
+	// 	to_write_uns = _MAX_UNS_INT_ + to_write + 1;
 	while (bytes < 4)
 	{
 		chunk = ft_power(256, (4 - (bytes + 1)));
-		vm->mem[(addr + bytes) % MEM_SIZE] = to_write / chunk;
+		vm->mem[(addr + bytes) % MEM_SIZE] = to_write_uns / chunk;
 		vm->owner[(addr + bytes) % MEM_SIZE] = proc->master;
-		to_write = to_write % chunk;
+		to_write_uns = to_write_uns % chunk;
 		bytes++;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/19 16:37:07 by andrewrze         #+#    #+#             */
-/*   Updated: 2019/11/13 19:11:44 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/15 13:18:55 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ t_process   *load_process_from_player(t_player player)
     process->cycles_left = g_op_tab[process->current_op - 1].cycles;
     process->pc = player.init_pc;
     //process->next_op = get_next_op(process->id); // Je pense que ce n'est pas utile a ce stade
-    init_registers(process, player);
+    init_registers(process);
     process->next = NULL;
     //ft_bzero(process->reg + 4, (REG_NUMBER - 1) * 4); // Initialisation a 0 est faite dans set_registers
     return (process);

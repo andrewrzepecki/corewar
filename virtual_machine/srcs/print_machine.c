@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/17 13:27:25 by eviana            #+#    #+#             */
-/*   Updated: 2019/11/14 17:45:15 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/15 12:38:58 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,6 +169,6 @@ int     print_arena(t_vm *vm)
         i++;
     }
     ft_printf("{eoc}     |\n");
-    //debug_lines(vm);
+    debug_lines(vm);
     return (0);
 }
