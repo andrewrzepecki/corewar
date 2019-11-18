@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/17 13:27:25 by eviana            #+#    #+#             */
-/*   Updated: 2019/11/15 12:38:58 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/18 15:25:39 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,5 +170,27 @@ int     print_arena(t_vm *vm)
     }
     ft_printf("{eoc}     |\n");
     debug_lines(vm);
+    return (0);
+}
+
+int     print_dump(t_vm *vm)
+{
+    int             i;
+    int             lines;
+
+    i = 0;
+    //ft_printf("\e[1;1H\e[2J"); // Pour clear le board
+    lines = ft_sqrt(MEM_SIZE);
+    while (i < MEM_SIZE)
+    {
+        if (i != 0 && i % lines == 0)
+            ft_printf("\n");
+        if (i % lines == 0)
+            ft_printf("0x%04x : ", i);
+        ft_printf("%02x ", vm->mem[i]);
+        i++;
+    }
+    ft_printf("\n");
+    //debug_lines(vm);
     return (0);
 }

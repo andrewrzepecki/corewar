@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_virtual_machine.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: andrewrzepecki <anrzepec@student.42.f      +#+  +:+       +#+        */
+/*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/18 12:44:35 by andrewrze         #+#    #+#             */
-/*   Updated: 2019/11/18 12:44:39 by andrewrze        ###   ########.fr       */
+/*   Updated: 2019/11/18 15:20:53 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int     option_review(t_vm *vm)
 {
     if (vm->dump == vm->cycles)
     {
-        print_arena(vm);
+        print_dump(vm);
         return (END_GAME);
     }
     if (vm->cycles && vm->vis != -1 && !(vm->cycles % vm->vis))
