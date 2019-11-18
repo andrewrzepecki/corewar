@@ -49,8 +49,8 @@ int		main(int ac, char **av)
 		return (init_error(err, vm));
 	create_arena(vm);
 	load_process_list(vm);
-	cycles(vm);
-	//print_arena(vm); // et si retour erreur ?
+	if (exec_machine(vm) == ALLOC_ERROR)
+		return (init_error(ALLOC_ERROR, vm));
 	free(vm);
 	return (0);
 }

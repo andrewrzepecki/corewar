@@ -53,7 +53,7 @@ t_vm 	*init_vm(int ac)
 	vm->process = (t_process*)malloc(sizeof(t_process)); // *
 	vm->process = NULL; // *
 	vm->last_live = NULL;// Le russe dit qu'elle doit etre initialisé avec le plus grand id de joueur
-	vm->dump = 0;
+	vm->dump = -1;
 	vm->nb_args = ac;
 	vm->nb_players = 0;
 	vm->cycles = 0;

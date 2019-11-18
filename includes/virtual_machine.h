@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 13:56:35 by anrzepec          #+#    #+#             */
-/*   Updated: 2019/11/15 17:25:22 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/18 13:20:33 by andrewrze        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,8 +145,10 @@ int     check_player_numbers(t_vm *vm, int player_nb);
 /*
 ** Runtime
 */
-int		cycles(t_vm *vm);
+int		exec_machine(t_vm *vm);
 t_param	set_params(t_vm *vm, t_process *proc, int pc, int *offset);
+int		process_review(t_vm *vm, t_process *process);
+int		life_check(t_vm *vm);
 
 /*
 ** Operations

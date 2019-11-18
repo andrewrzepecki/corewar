@@ -32,7 +32,9 @@ COMMON		= main \
 			parse_option \
 			parse_player \
 			load_process \
-			cycles \
+			exec_virtual_machine \
+			process_review \
+			life_check \
 			print_machine \
 			tools \
 			error \
