@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 12:46:35 by andrewrze         #+#    #+#             */
-/*   Updated: 2019/11/13 17:46:03 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/19 15:22:16 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ t_vm 	*init_vm(int ac)
 	vm->dump = -1;
 	vm->nb_args = ac;
 	vm->nb_players = 0;
-	vm->cycles = 1;
+	vm->cycles = 0;
 	vm->nb_lives = 0;
 	vm->cycles_to_die = CYCLE_TO_DIE;
 	vm->nb_checks = 0;

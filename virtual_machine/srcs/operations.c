@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/22 14:40:47 by eviana            #+#    #+#             */
-/*   Updated: 2019/11/15 18:23:41 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/19 15:10:44 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,16 @@ int		op_live(t_vm *vm, t_process *proc)
 	i = 0;
 	id = read_address(vm, (proc->pc + 1) % MEM_SIZE, 4);
 	id =  id < 0 ? id * -1 : id; //bidouille pour tester
-	ft_printf("Trying to call live on %- 10d\n", id);
-	ft_printf("id is % 10d for pc % 10d\n", id, proc->pc + 1);
+	// ft_printf("Trying to call live on %- 10d\n", id);
+	// ft_printf("id is % 10d for pc % 10d\n", id, proc->pc + 1);
 	if (id) // a voir si concordant avec notre traitement des ids // sinon faire une fonction is_valid_player()
 	{
 		while (i < vm->nb_players)
 		{
 			if (id == vm->player[i].id)
 			{
-				ft_printf("Player %s (%d) is alive!\n", vm->player[i].name, id);
+				//if (vm->verbose == 1)
+					//ft_printf("Player %s (%d) is alive!\n", vm->player[i].name, id);
 				vm->player[i].last_live = vm->cycles;
 				vm->last_live = &vm->player[i];
 			}

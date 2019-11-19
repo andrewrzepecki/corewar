@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/18 12:44:35 by andrewrze         #+#    #+#             */
-/*   Updated: 2019/11/18 15:20:53 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/19 15:48:33 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int     option_review(t_vm *vm)
         print_dump(vm);
         return (END_GAME);
     }
-    if (vm->cycles && vm->vis != -1 && !(vm->cycles % vm->vis))
+    if (vm->vis != -1 && !(vm->cycles % vm->vis))
     {
         print_arena(vm);
         sleep(1);
@@ -55,9 +55,9 @@ int     exec_machine(t_vm *vm)
 {
     t_process *champion;
 
-    int i = -1;
-    while (++i < vm->nb_players)
-        ft_printf("%s is player number %-10d\n", vm->player[i].name, vm->player[i].id);
+    // int i = -1;
+    // while (++i < vm->nb_players)
+    //     ft_printf("%s is player number %-10d\n", vm->player[i].name, vm->player[i].id);
     while (machine_review(vm) != END_GAME)
     {
         champion = vm->process;

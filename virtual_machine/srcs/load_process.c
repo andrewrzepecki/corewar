@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/19 16:37:07 by andrewrze         #+#    #+#             */
-/*   Updated: 2019/11/15 13:18:55 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/19 15:50:46 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ t_process   *load_process_from_player(t_player player)
     process->carry = 0;
     process->last_live = 0;
     process->current_op = player.exec[0];
-    process->cycles_left = g_op_tab[process->current_op - 1].cycles;
+    process->cycles_left = g_op_tab[process->current_op - 1].cycles - 1;
     process->pc = player.init_pc;
     //process->next_op = get_next_op(process->id); // Je pense que ce n'est pas utile a ce stade
     init_registers(process);

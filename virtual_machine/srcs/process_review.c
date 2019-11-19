@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cycles.c                                           :+:      :+:    :+:   */
+/*   process_review.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/18 17:58:15 by eviana            #+#    #+#             */
-/*   Updated: 2019/11/15 16:57:30 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/19 16:39:50 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ int     op_dispatch(t_vm *vm, t_process *proc, int op_code)
 void    get_cycles_left(t_process *proc)
 {
     if (is_valid_op(proc->current_op))
-        proc->cycles_left = g_op_tab[proc->current_op - 1].cycles;
-    else // useless, ici pour la compréhension
+        proc->cycles_left = g_op_tab[proc->current_op - 1].cycles - 1;
+    else 
         proc->cycles_left = 0;
 }
 
@@ -59,6 +59,7 @@ int    update_process(t_vm *vm, t_process *proc)
         set_current_op(vm, proc);
     else if (!is_valid_op(proc->current_op)) // si opcode invalide on avance d'un et on laisse le cycle_left à 0
     {
+        //ft_printf("L'operation n'est pas valide : pc = %d : c_op = %d\n", proc->pc, proc->current_op);
         proc->pc = (proc->pc + 1) % MEM_SIZE;
         set_current_op(vm, proc);
     }
