@@ -70,7 +70,7 @@ int     parse_player(t_vm *vm, char **av, int i)
     if (parse_exec(fd, vm))
         return (EXEC_ERROR);
     vm->nb_players++;
-    vm->player[vm->nb_players - 1].id = vm->nb_option ? vm->nb_option : -vm->nb_players;
+    vm->player[vm->nb_players - 1].id = vm->nb_option ? vm->nb_option : vm->nb_players;
     vm->nb_option = 0;
     return (check_player_numbers(vm, vm->nb_players));
 }
