@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/18 17:58:15 by eviana            #+#    #+#             */
-/*   Updated: 2019/11/19 16:39:50 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/19 22:33:22 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int     op_dispatch(t_vm *vm, t_process *proc, int op_code)
 	op[13] = &op_lldi;
 	op[14] = &op_lfork;
 	op[15] = &op_aff;
-    //ft_printf("cycle %d : opcode %d pour proc %d\n", vm->cycles, op_code, proc->id);
+    ft_printf("cycle %d : opcode %d pour proc %d\n", vm->cycles, op_code, proc->id);
     return (op[op_code - 1](vm, proc));
     //return(0);
 }
@@ -59,7 +59,7 @@ int    update_process(t_vm *vm, t_process *proc)
         set_current_op(vm, proc);
     else if (!is_valid_op(proc->current_op)) // si opcode invalide on avance d'un et on laisse le cycle_left à 0
     {
-        //ft_printf("L'operation n'est pas valide : pc = %d : c_op = %d\n", proc->pc, proc->current_op);
+        // ft_printf("L'operation n'est pas valide : cycle = %d | pc = %d | c_op = %d\n", vm->cycles, proc->pc, proc->current_op);
         proc->pc = (proc->pc + 1) % MEM_SIZE;
         set_current_op(vm, proc);
     }

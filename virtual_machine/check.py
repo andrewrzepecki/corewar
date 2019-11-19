@@ -5,6 +5,8 @@ import subprocess
 
 champ1 = "../champs/Octobre_Rouge_V4.2.cor"
 champ2 = "../champs/Gagnant.cor"
+# champ1 = "champs/ldi.cor"
+# champ2 = "champs/ldi.cor"
 
 def set_ouputs(cycle):
     with open("tests/zaz.txt", 'w') as fzaz: # Pour output la version de zaz
@@ -54,5 +56,6 @@ if __name__ == "__main__":
         for i in range(start, end + 1):
             set_ouputs(i)
             if get_diff():
-                print("\033[93m-----LA DIFFERENCE SE TROUVE AU CYCLE {}-----".format(i))
+                print("\033[93m----- LA DIFFERENCE SE TROUVE AU CYCLE {} -----".format(i))
                 exit(0)
+        print("\033[92m✓✓✓ Tout est OK")

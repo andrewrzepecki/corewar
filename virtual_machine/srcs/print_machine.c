@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/17 13:27:25 by eviana            #+#    #+#             */
-/*   Updated: 2019/11/18 15:25:39 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/19 22:32:05 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ void    debug_lines(t_vm *vm)
     while (current)
     {
         i = 0;
-        ft_printf("Proc %d(m%d) pc : %d | c_op : %d | c_left : %d | regs : [", current->id, current->master, current->pc, current->current_op, current->cycles_left);
+        ft_printf("Proc %d(m%d) pc : %d | c_op : %d | c_left : %d | last_l : %d | regs : [", current->id, current->master, current->pc, current->current_op, current->cycles_left, current->last_live);
         while (++i < 17)
             ft_printf("%d : %d | ", i, current->reg[i]);
         ft_printf("]\n");
@@ -169,7 +169,7 @@ int     print_arena(t_vm *vm)
         i++;
     }
     ft_printf("{eoc}     |\n");
-    debug_lines(vm);
+    //debug_lines(vm);
     return (0);
 }
 

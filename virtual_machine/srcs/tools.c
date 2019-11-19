@@ -6,25 +6,36 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 12:49:41 by andrewrze         #+#    #+#             */
-/*   Updated: 2019/11/15 18:31:17 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/19 19:06:24 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "virtual_machine.h"
 
-int		vegetable_garden(t_process *proc, int addr)
+int		modulo_mem_size(int addr)
 {
-	int restr_addr;
-	int	new_addr;
+	if (addr >= 0)
+		return (addr % MEM_SIZE);
+	else
+		return (MEM_SIZE + (addr % MEM_SIZE));
+}
 
-	restr_addr = addr % IDX_MOD;
-	if (restr_addr > IDX_MOD / 2) // TEST EN COURS
-		restr_addr = - IDX_MOD + restr_addr;
+int		vegetable_garden(t_process *proc, int addr) // Sensé renvoyer des adresses absolues
+{
+	// int restr_addr;
+	// int	new_addr;
+
+	// restr_addr = addr % IDX_MOD;
 	
-	new_addr = (proc->pc + restr_addr) % MEM_SIZE;
-	if (new_addr < 0)
-		new_addr = MEM_SIZE + new_addr;
-	return (new_addr);
+	// if (restr_addr >= IDX_MOD / 2) // TEST EN COURS
+	// 	restr_addr = - IDX_MOD + restr_addr;
+
+	// new_addr = (proc->pc + restr_addr) % MEM_SIZE;
+	// if (new_addr < 0)
+	// 	new_addr = MEM_SIZE + new_addr;
+
+	// return (new_addr);
+	return ((proc->pc + (addr % IDX_MOD)) % MEM_SIZE);
 }
 
 void	param_dump(t_param params)
