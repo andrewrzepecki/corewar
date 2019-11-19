@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 13:56:35 by anrzepec          #+#    #+#             */
-/*   Updated: 2019/11/18 13:20:33 by andrewrze        ###   ########.fr       */
+/*   Updated: 2019/11/19 09:52:43 by anrzepec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,7 @@ typedef	struct			s_vm
 	int					last_verif;		/* cycle de la dernière verification des process en vie */
 	int					nb_proc;
 	int					lives_since_check;
+	int					nb_option;
 }						t_vm;
 
 typedef struct    s_param
@@ -193,6 +194,7 @@ int		init_error(int error, t_vm *vm);
 /*
 ** Print
 */
+int		print_dump(t_vm *vm);
 int		print_arena(t_vm *vm);
 
 /*

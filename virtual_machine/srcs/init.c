@@ -52,16 +52,17 @@ t_vm 	*init_vm(int ac)
 	vm->vis = -1;
 	vm->process = (t_process*)malloc(sizeof(t_process)); // *
 	vm->process = NULL; // *
-	vm->last_live = NULL;// Le russe dit qu'elle doit etre initialisé avec le plus grand id de joueur
+	// Le russe dit qu'elle doit etre initialisé avec le plus grand id de joueur
 	vm->dump = -1;
 	vm->nb_args = ac;
 	vm->nb_players = 0;
-	vm->cycles = 0;
+	vm->cycles = 1;
 	vm->nb_lives = 0;
 	vm->cycles_to_die = CYCLE_TO_DIE;
 	vm->nb_checks = 0;
 	vm->last_verif = 0; // NEW ! usefull ?
 	vm->lives_since_check = 0;
+	vm->nb_option = 0;
 	init_players(vm);
 	return (vm);
 }

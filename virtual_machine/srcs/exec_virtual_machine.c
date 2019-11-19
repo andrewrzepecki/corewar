@@ -55,6 +55,9 @@ int     exec_machine(t_vm *vm)
 {
     t_process *champion;
 
+    int i = -1;
+    while (++i < vm->nb_players)
+        ft_printf("%s is player number %-10d\n", vm->player[i].name, vm->player[i].id);
     while (machine_review(vm) != END_GAME)
     {
         champion = vm->process;

@@ -45,7 +45,7 @@ int     check_player_numbers(t_vm *vm, int player_nb)
     i = 0;
     while (i < vm->nb_players)
     {
-        if (vm->player[player_nb].id == vm->player[i].id && i != player_nb)
+        if (vm->player[player_nb - 1].id == vm->player[i].id && player_nb - 1 != i)
         {
             vm->player[i].id++;
             return (check_player_numbers(vm, i));
@@ -70,7 +70,7 @@ int     parse_player(t_vm *vm, char **av, int i)
     if (parse_exec(fd, vm))
         return (EXEC_ERROR);
     vm->nb_players++;
-    if (vm->player[vm->nb_players - 1].id < 0)
-        vm->player[vm->nb_players - 1].id = vm->nb_players;
+    vm->player[vm->nb_players - 1].id = vm->nb_option ? vm->nb_option : -vm->nb_players;
+    vm->nb_option = 0;
     return (check_player_numbers(vm, vm->nb_players));
 }

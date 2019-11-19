@@ -34,8 +34,10 @@ int     number_option(t_vm *vm, char **av, int *i)
     {
         if (vm->nb_players < MAX_PLAYERS)
         {
-            if ((vm->player[vm->nb_players].id = ft_atoi(av[++(*i)])) > 0)
-                return (check_player_numbers(vm, vm->nb_players));
+            if ((vm->nb_option = ft_atoi(av[++(*i)])) > 0)
+                return (OH_OUI);
+            else
+                return (PLAYER_NUMBER_ERROR);
         }
     }
     return (PLAYER_NUMBER_ERROR);

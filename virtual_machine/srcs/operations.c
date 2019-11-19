@@ -19,16 +19,29 @@
 
 int		op_live(t_vm *vm, t_process *proc)
 {
+	int 	i;
 	int		id;
 	
+	i = 0;
 	id = read_address(vm, (proc->pc + 1) % MEM_SIZE, 4);
-	if (id > 0 && id < vm->nb_players) // a voir si concordant avec notre traitement des ids // sinon faire une fonction is_valid_player()
+	id =  id < 0 ? id * -1 : id; //bidouille pour tester
+	ft_printf("Trying to call live on %- 10d\n", id);
+	ft_printf("id is % 10d for pc % 10d\n", id, proc->pc + 1);
+	if (id) // a voir si concordant avec notre traitement des ids // sinon faire une fonction is_valid_player()
 	{
-		//ft_printf("Player %s (%d) is alive!\n", vm->player[id].name, id);
-		vm->player[id].last_live = vm->cycles;
+		while (i < vm->nb_players)
+		{
+			if (id == vm->player[i].id)
+			{
+				ft_printf("Player %s (%d) is alive!\n", vm->player[i].name, id);
+				vm->player[i].last_live = vm->cycles;
+				vm->last_live = &vm->player[i];
+			}
+			i++;
+		}
 		//vm->last_live = &vm->player[id]; // segfault
-		proc->last_live = vm->cycles;
 	}
+	proc->last_live = vm->cycles;
 	//else
 		//ft_printf("Player with id %d doesn't exist: error\n", id);
 	vm->lives_since_check++;
@@ -259,7 +272,7 @@ int		op_fork(t_vm *vm, t_process *proc) // WORK IN PROGRESS
 	new->master = proc->master;
     new->carry = proc->carry;
     new->last_live = vm->cycles; // On met le cycle courant ?
-	ft_printf("Where to be forked: %d\n", read_address(vm, (proc->pc + 1) % MEM_SIZE, 2));
+	//ft_printf("Where to be forked: %d\n", read_address(vm, (proc->pc + 1) % MEM_SIZE, 2));
     new->pc = (proc->pc + (read_address(vm, (proc->pc + 1) % MEM_SIZE, 2) % IDX_MOD)) % MEM_SIZE;
     new->current_op = vm->mem[new->pc];
 	if (is_valid_op(new->current_op))

@@ -46,14 +46,12 @@ int     life_check(t_vm *vm)
                 current = list_delone(prec, current);
         }
         prec = current;
-        current = current->next;
+        if (current)
+            current = current->next;
     }
-    if (vm->process == NULL || vm->process->next == NULL)
+    if (vm->process == NULL && vm->last_live)
     {
-        if (vm->process == NULL)
-            ft_printf("TOUT LE MONDE EST MORT\n"); // TEST
-        else
-            ft_printf("LE DERNIER DES MOHICANS EST %d, son maitre est \"%d\"\n", vm->process->id, vm->process->master);
+        ft_printf("Le gagnant: %20s\n", vm->last_live->name);
         return (END_GAME);
     }
     /* garder une valeur de retour pour la condition d'arrêt du while de cycles() ? 
