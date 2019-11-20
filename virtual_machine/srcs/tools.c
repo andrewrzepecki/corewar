@@ -6,13 +6,13 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 12:49:41 by andrewrze         #+#    #+#             */
-/*   Updated: 2019/11/19 19:06:24 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/20 14:24:11 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "virtual_machine.h"
 
-int		modulo_mem_size(int addr)
+int		modulo_mem_size(int addr) // va prendre pc + offset / address semi absolue => renvoie addresse absolue
 {
 	if (addr >= 0)
 		return (addr % MEM_SIZE);
@@ -22,6 +22,18 @@ int		modulo_mem_size(int addr)
 
 int		vegetable_garden(t_process *proc, int addr) // Sensé renvoyer des adresses absolues
 {
+	return ((((proc->pc + addr) % MEM_SIZE) - proc->pc) % IDX_MOD);
+	
+	// bouclage = rel_addr % MEM_SIZE;
+
+	// new_absolute = (pc + bouclage) % MEM_SIZE = (pc + rel_addr) % MEM_SIZE;
+
+	// decalage = new_absolute - pc
+
+	// decalage = decalage % IDX_MOD
+
+	
+	/* OLD SHIT */
 	// int restr_addr;
 	// int	new_addr;
 
@@ -35,7 +47,7 @@ int		vegetable_garden(t_process *proc, int addr) // Sensé renvoyer des adresses
 	// 	new_addr = MEM_SIZE + new_addr;
 
 	// return (new_addr);
-	return ((proc->pc + (addr % IDX_MOD)) % MEM_SIZE);
+	// return (modulo_mem_size(proc->pc + (addr % IDX_MOD)));
 }
 
 void	param_dump(t_param params)
@@ -97,7 +109,7 @@ void        copy_registers(t_process *new, t_process *proc)
 
 int			long_rel_address(t_process *proc, int add1, int add2) // sans adressage restreint
 {
-	return ((proc->pc + add1 + add2) % MEM_SIZE);
+	return (modulo_mem_size(proc->pc + add1 + add2));
 }
 
 int			read_address(t_vm *vm, int addr, size_t bytes)

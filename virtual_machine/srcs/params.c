@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 18:33:09 by eviana            #+#    #+#             */
-/*   Updated: 2019/11/14 16:28:00 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/20 14:30:49 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int			get_param(t_vm *vm, t_process *proc, int pc, int code)
 	else if (code == IND_CODE)
 	{
 		if (g_op_tab[proc->current_op - 1].restr)
-			return (vegetable_garden(proc, read_address(vm, pc, 2)));
+			return (modulo_mem_size(proc->pc + vegetable_garden(proc, read_address(vm, pc, 2))));
 		else
 			return ((proc->pc + read_address(vm, pc, 2)) % MEM_SIZE);
 	}

@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/22 14:40:47 by eviana            #+#    #+#             */
-/*   Updated: 2019/11/19 22:40:04 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/20 14:43:20 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,24 +24,18 @@ int		op_live(t_vm *vm, t_process *proc)
 	
 	i = 0;
 	id = read_address(vm, (proc->pc + 1) % MEM_SIZE, 4);
-	id =  id < 0 ? id * -1 : id; //bidouille pour tester
-	ft_printf("Trying to call live : id is %d for pc %d\n", id, proc->pc + 1);
-	ft_printf("Nombre de joueurs : %d\n", vm->nb_players);
-	if (id) // a voir si concordant avec notre traitement des ids // sinon faire une fonction is_valid_player()
+	while (i < vm->nb_players)
 	{
-		while (i < vm->nb_players)
+		if (id == vm->player[i].id) // ou -id == vm->player[i].id
 		{
-			if (id == vm->player[i].id)
-			{
-				//if (vm->verbose == 1)
-					//ft_printf("Player %s (%d) is alive!\n", vm->player[i].name, id);
-				vm->player[i].last_live = vm->cycles;
-				vm->last_live = &vm->player[i];
-			}
-			i++;
+			//if (vm->verbose == 1)
+				//ft_printf("Player %s (%d) is alive!\n", vm->player[i].name, id);
+			vm->player[i].last_live = vm->cycles;
+			vm->last_live = &vm->player[i];
 		}
-		//vm->last_live = &vm->player[id]; // segfault
+		i++;
 	}
+	//vm->last_live = &vm->player[id]; // segfault
 	proc->last_live = vm->cycles;
 	//else
 		//ft_printf("Player with id %d doesn't exist: error\n", id);
@@ -211,9 +205,11 @@ int		op_zjmp(t_vm *vm, t_process *proc) // AVEC IDX_MOD ???
 	// if (proc->carry)
 	// 	ft_printf("Jump to: %d %d and pc = %d\n", vm->mem[(proc->pc + 1) % MEM_SIZE], vm->mem[(proc->pc + 2) % MEM_SIZE], proc->pc); // En sortie il faudra appliquer le % MEM_SIZE, on peut le faire en utilisant move_pc
 	if (proc->carry)
-		return (read_address(vm, (proc->pc + 1) % MEM_SIZE, 2)); // SANS IDX_MOD
+		// SANS IDX_MOD
+		// 	return (read_address(vm, (proc->pc + 1) % MEM_SIZE, 2));
 		// AVEC IDX_MOD
-		//return (read_address(vm, (proc->pc + 1) % MEM_SIZE, 2) % IDX_MOD); // En sortie il faudra appliquer le % MEM_SIZE, on peut le faire en utilisant move_pc
+		return (vegetable_garden(proc, read_address(vm, (proc->pc + 1) % MEM_SIZE, 2)));
+		// return (read_address(vm, (proc->pc + 1) % MEM_SIZE, 2) % IDX_MOD);
 	else
 		return (3); // 1 + 2 : on passe l'opcode, puis on passe le D2
 }
@@ -234,11 +230,11 @@ int		op_ldi(t_vm *vm, t_process *proc)
 			params.n[1] = proc->reg[params.n[1]];
 		
 		// AVEC VEGETABLE GARDEN
-		//proc->reg[params.n[2]] = read_address(vm, vegetable_garden(proc, params.n[0] + params.n[1]), 4);
+		proc->reg[params.n[2]] = read_address(vm, modulo_mem_size(proc->pc + vegetable_garden(proc, params.n[0] + params.n[1])), 4);
 
 		// SANS VEGETABLE GARDEN
 		// ft_printf("pc = %d | params.n[1] = %d | params.n[2] = %d | addr = %d\n", (proc->pc + (params.n[0] + params.n[1])) % MEM_SIZE);
-		proc->reg[params.n[2]] = read_address(vm, (proc->pc + (params.n[0] + params.n[1])) % MEM_SIZE, 4);
+		// proc->reg[params.n[2]] = read_address(vm, modulo_mem_size(proc->pc + (params.n[1] + params.n[2])), 4);
 
 		// if (proc->reg[params.n[2]] == 0)
 		// 	proc->carry = 1;
@@ -253,6 +249,7 @@ int		op_sti(t_vm *vm, t_process *proc)
 	t_param	params;
 	int		offset;
 
+
 	params = set_params(vm, proc, proc->pc, &offset);
 	if (params.valid) // anciennement : if (is_valid_reg(params.n[0]))
 	{
@@ -265,16 +262,17 @@ int		op_sti(t_vm *vm, t_process *proc)
 			params.n[2] = proc->reg[params.n[2]];
 		
 		// AVEC VEGETABLE GARDEN
-		// write_to_address(vm, proc, vegetable_garden(proc, params.n[1] + params.n[2]), proc->reg[params.n[0]]);
+		write_to_address(vm, proc, modulo_mem_size(proc->pc + vegetable_garden(proc, params.n[1] + params.n[2])), proc->reg[params.n[0]]);
 
 		// SANS VEGETABLE GARDEN
-		write_to_address(vm, proc, (proc->pc + (params.n[1] + params.n[2])) % MEM_SIZE, proc->reg[params.n[0]]);
+		// write_to_address(vm, proc, modulo_mem_size(proc->pc + (params.n[1] + params.n[2])), proc->reg[params.n[0]]);
 
 		// if (proc->reg[params.n[0]] == 0) // Certains disent non
 		// 	proc->carry = 1;
 		// else
 		// 	proc->carry = 0;
 	}
+
 	return (offset);
 }
 
@@ -290,11 +288,12 @@ int		op_fork(t_vm *vm, t_process *proc) // WORK IN PROGRESS
     new->last_live = vm->cycles; // On met le cycle courant ?
 	//ft_printf("Where to be forked: %d\n", read_address(vm, (proc->pc + 1) % MEM_SIZE, 2));
     
-	//new->pc = (proc->pc + read_address(vm, (proc->pc + 1) % MEM_SIZE, 2)) % MEM_SIZE; // !!!!! Sans IDX_MOD
+	// !!!!! Sans IDX_MOD
+	//new->pc = (proc->pc + read_address(vm, (proc->pc + 1) % MEM_SIZE, 2)) % MEM_SIZE; 
 	
-	new->pc = (proc->pc + (read_address(vm, (proc->pc + 1) % MEM_SIZE, 2) % IDX_MOD)) % MEM_SIZE; // Avec IDX_MOD
- 
- 
+	// Avec IDX_MOD	
+	new->pc = modulo_mem_size(proc->pc + vegetable_garden(proc, read_address(vm, (proc->pc + 1) % MEM_SIZE, 2)));
+  
     new->current_op = vm->mem[new->pc];
 	if (is_valid_op(new->current_op))
     	new->cycles_left = g_op_tab[new->current_op - 1].cycles;
@@ -339,7 +338,7 @@ int		op_lldi(t_vm *vm, t_process *proc)
 			params.n[0] = read_address(vm, params.n[0], 4);
 		if (params.c[1] == IND_CODE)
 			params.n[1] = read_address(vm, params.n[1], 4);
-		proc->reg[params.n[2]] = read_address(vm, long_rel_address(proc, params.n[0], params.n[1]), 4);
+		proc->reg[params.n[2]] = read_address(vm, modulo_mem_size(proc->pc + params.n[0] + params.n[1]), 4);
 		if (proc->reg[params.n[2]] == 0)
 			proc->carry = 1;
 		else
@@ -358,8 +357,12 @@ int		op_lfork(t_vm *vm, t_process *proc) // WORK IN PROGRESS
 	new->master = proc->master;
     new->carry = proc->carry;
     new->last_live = vm->cycles; // On met le cycle courant ?
-    new->pc = (proc->pc + read_address(vm, (proc->pc + 1) % MEM_SIZE, 2)) % MEM_SIZE;
-    new->current_op = vm->mem[new->pc];
+	new->pc = modulo_mem_size(proc->pc + read_address(vm, (proc->pc + 1) % MEM_SIZE, 2));
+
+	// OLD
+    // new->pc = (proc->pc + read_address(vm, (proc->pc + 1) % MEM_SIZE, 2)) % MEM_SIZE;
+    
+	new->current_op = vm->mem[new->pc];
 	if (is_valid_op(new->current_op))
     	new->cycles_left = g_op_tab[new->current_op - 1].cycles;
 	else

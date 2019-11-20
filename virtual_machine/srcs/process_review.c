@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/18 17:58:15 by eviana            #+#    #+#             */
-/*   Updated: 2019/11/19 22:33:22 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/20 14:42:57 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int     op_dispatch(t_vm *vm, t_process *proc, int op_code)
 	op[13] = &op_lldi;
 	op[14] = &op_lfork;
 	op[15] = &op_aff;
-    ft_printf("cycle %d : opcode %d pour proc %d\n", vm->cycles, op_code, proc->id);
+    // ft_printf("cycle %d : opcode %d pour proc %d\n", vm->cycles, op_code, proc->id);
     return (op[op_code - 1](vm, proc));
     //return(0);
 }
@@ -65,9 +65,8 @@ int    update_process(t_vm *vm, t_process *proc)
     }
     else // si on voit toujours le meme opcode valide que celui enregistré on avance en fonctions des operations
     {
-        if ((offset = op_dispatch(vm, proc, proc->current_op)) == -1)
-            return (1);
-        proc->pc = (proc->pc + offset) % MEM_SIZE;
+        offset = op_dispatch(vm, proc, proc->current_op);
+        proc->pc = modulo_mem_size(proc->pc + offset);
         set_current_op(vm, proc);
     }
     return (0);
@@ -75,6 +74,7 @@ int    update_process(t_vm *vm, t_process *proc)
 
 int    process_review(t_vm *vm, t_process *process)
 {
+
     if (!process->cycles_left || process->current_op != vm->mem[process->pc])
     {
         if (update_process(vm, process))

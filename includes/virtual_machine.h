@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 13:56:35 by anrzepec          #+#    #+#             */
-/*   Updated: 2019/11/19 09:52:43 by anrzepec         ###   ########.fr       */
+/*   Updated: 2019/11/20 14:19:24 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ typedef struct 			s_op
 	int					cycles;
 	char				description[50];
 	int					ocp;
-	int					dir_size;
+	int					dir_size; // 1 pour dir_size = 2 // 0 pour dir_size = 4
 	int					restr;
 }						t_op;
 
@@ -184,7 +184,8 @@ int		long_rel_address(t_process *proc, int add1, int add2);
 int		read_address(t_vm *vm, int addr, size_t bytes);
 int		read_bytes(unsigned char *mem, size_t size);
 void	write_to_address(t_vm *vm, t_process *proc, int addr, int to_write);
-int		vegetable_garden(t_process *proc, int pc);
+int		vegetable_garden(t_process *proc, int addr);
+int		modulo_mem_size(int addr);
 
 /*
 ** Error management

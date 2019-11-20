@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 16:51:00 by anrzepec          #+#    #+#             */
-/*   Updated: 2019/10/22 19:02:39 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/20 12:28:28 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int		main(int ac, char **av)
 		return (init_error(err, vm));
 	create_arena(vm);
 	load_process_list(vm);
-	vm->last_live = &vm->player[vm->nb_players];
+	vm->last_live = &vm->player[vm->nb_players - 1];
 	if (exec_machine(vm) == ALLOC_ERROR)
 		return (init_error(ALLOC_ERROR, vm));
 	free(vm);
