@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/17 13:27:25 by eviana            #+#    #+#             */
-/*   Updated: 2019/11/20 14:44:56 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/20 20:39:56 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,21 +18,21 @@ void    print_bytes(t_vm *vm, int i)
     
     color = vm->owner[i] % 8;
     if (color == 0)
-        ft_printf("{eoc}%02x ", vm->mem[i]);
+        ft_printf("{eoc}%02x ", vm->mem[i]); // & 0xFF); pour switch char
     else if (color == 1)
-        ft_printf("{red}%02x ", vm->mem[i]);
+        ft_printf("{red}%02x ", vm->mem[i]); // & 0xFF);
     else if (color == 2)
-        ft_printf("{green}%02x ", vm->mem[i]);
+        ft_printf("{green}%02x ", vm->mem[i]); // & 0xFF);
     else if (color == 3)
-        ft_printf("{purple}%02x ", vm->mem[i]);
+        ft_printf("{purple}%02x ", vm->mem[i]); // & 0xFF);
     else if (color == 4)
-        ft_printf("{blue}%02x ", vm->mem[i]);
+        ft_printf("{blue}%02x ", vm->mem[i]); // & 0xFF);
     else if (color == 5)
-        ft_printf("{yellow}%02x ", vm->mem[i]);
+        ft_printf("{yellow}%02x ", vm->mem[i]); // & 0xFF);
     else if (color == 6)
-        ft_printf("{cyan}%02x ", vm->mem[i]);
+        ft_printf("{cyan}%02x ", vm->mem[i]); // & 0xFF);
     else if (color == 7)
-        ft_printf("{magenta}%02x ", vm->mem[i]);
+        ft_printf("{magenta}%02x ", vm->mem[i]); // & 0xFF);
 }
 
 void    pannel_line(char *line)

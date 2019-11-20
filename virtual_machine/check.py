@@ -8,6 +8,22 @@ champ2 = "../champs/Gagnant.cor"
 # champ1 = "champs/ldi.cor"
 # champ2 = "champs/ldi.cor"
 
+class ProgressBar:
+    def __init__ (self, valmax, maxbar, title):
+        if valmax == 0:  valmax = 1
+        if maxbar > 200: maxbar = 200
+        self.valmax = valmax
+        self.maxbar = maxbar
+        self.title  = title
+    
+    def update(self, val):
+        if val > self.valmax: val = self.valmax
+        perc  = round((float(val) / float(self.valmax)) * 100)
+        scale = 100.0 / float(self.maxbar)
+        bar   = int(perc / scale)
+        out = '\r%s [%s%s] %3d %%' % (self.title, '=' * bar, ' ' * (self.maxbar - bar), perc)
+        sys.stdout.write(out)
+
 def set_ouputs(cycle):
     with open("tests/zaz.txt", 'w') as fzaz: # Pour output la version de zaz
             subprocess.call([".././corewar", "-d", str(cycle), champ1, champ2], stdout=fzaz)
@@ -53,9 +69,11 @@ if __name__ == "__main__":
     elif len(sys.argv[1:]) == 2: 
         start = int(sys.argv[1]) 
         end = int(sys.argv[2])
+        Bar = ProgressBar(100, 60, 'Checking : ')
         for i in range(start, end + 1):
+            Bar.update(round(((start + i) / (end + 1 - start)) * 100) + 1)
             set_ouputs(i)
             if get_diff():
                 print("\033[93m----- LA DIFFERENCE SE TROUVE AU CYCLE {} -----".format(i))
                 exit(0)
-        print("\033[92m✓✓✓ Tout est OK")
+        print("\033[92m\n✓✓✓ Tout est OK")

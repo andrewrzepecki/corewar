@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/22 14:40:47 by eviana            #+#    #+#             */
-/*   Updated: 2019/11/20 14:43:20 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/20 19:56:10 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,11 +205,13 @@ int		op_zjmp(t_vm *vm, t_process *proc) // AVEC IDX_MOD ???
 	// if (proc->carry)
 	// 	ft_printf("Jump to: %d %d and pc = %d\n", vm->mem[(proc->pc + 1) % MEM_SIZE], vm->mem[(proc->pc + 2) % MEM_SIZE], proc->pc); // En sortie il faudra appliquer le % MEM_SIZE, on peut le faire en utilisant move_pc
 	if (proc->carry)
+
 		// SANS IDX_MOD
-		// 	return (read_address(vm, (proc->pc + 1) % MEM_SIZE, 2));
+		// return (read_address(vm, (proc->pc + 1) % MEM_SIZE, 2));
+
 		// AVEC IDX_MOD
 		return (vegetable_garden(proc, read_address(vm, (proc->pc + 1) % MEM_SIZE, 2)));
-		// return (read_address(vm, (proc->pc + 1) % MEM_SIZE, 2) % IDX_MOD);
+		//return (read_address(vm, (proc->pc + 1) % MEM_SIZE, 2) % IDX_MOD);
 	else
 		return (3); // 1 + 2 : on passe l'opcode, puis on passe le D2
 }
@@ -285,7 +287,11 @@ int		op_fork(t_vm *vm, t_process *proc) // WORK IN PROGRESS
 	new->id = vm->nb_proc++; // comment on gere les id de process ?
 	new->master = proc->master;
     new->carry = proc->carry;
-    new->last_live = vm->cycles; // On met le cycle courant ?
+
+
+    // new->last_live = vm->cycles; // On met le cycle courant ?
+	new->last_live = 0;
+
 	//ft_printf("Where to be forked: %d\n", read_address(vm, (proc->pc + 1) % MEM_SIZE, 2));
     
 	// !!!!! Sans IDX_MOD
@@ -296,7 +302,7 @@ int		op_fork(t_vm *vm, t_process *proc) // WORK IN PROGRESS
   
     new->current_op = vm->mem[new->pc];
 	if (is_valid_op(new->current_op))
-    	new->cycles_left = g_op_tab[new->current_op - 1].cycles;
+    	new->cycles_left = g_op_tab[new->current_op - 1].cycles - 1;
 	else
 		new->cycles_left = 0; // ou 1 ?
 	copy_registers(new, proc);
@@ -356,7 +362,12 @@ int		op_lfork(t_vm *vm, t_process *proc) // WORK IN PROGRESS
 	new->id = vm->nb_proc++; // comment on gere les id de process ?
 	new->master = proc->master;
     new->carry = proc->carry;
-    new->last_live = vm->cycles; // On met le cycle courant ?
+
+
+    // new->last_live = vm->cycles; // On met le cycle courant ?
+	new->last_live = 0;
+
+
 	new->pc = modulo_mem_size(proc->pc + read_address(vm, (proc->pc + 1) % MEM_SIZE, 2));
 
 	// OLD
@@ -364,7 +375,7 @@ int		op_lfork(t_vm *vm, t_process *proc) // WORK IN PROGRESS
     
 	new->current_op = vm->mem[new->pc];
 	if (is_valid_op(new->current_op))
-    	new->cycles_left = g_op_tab[new->current_op - 1].cycles;
+    	new->cycles_left = g_op_tab[new->current_op - 1].cycles - 1;
 	else
 		new->cycles_left = 0; // ou 1 ?
 	copy_registers(new, proc);

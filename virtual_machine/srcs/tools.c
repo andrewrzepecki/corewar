@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 12:49:41 by andrewrze         #+#    #+#             */
-/*   Updated: 2019/11/20 14:24:11 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/20 20:39:25 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,18 @@ int		modulo_mem_size(int addr) // va prendre pc + offset / address semi absolue 
 		return (MEM_SIZE + (addr % MEM_SIZE));
 }
 
-int		vegetable_garden(t_process *proc, int addr) // Sensé renvoyer des adresses absolues
+int		vegetable_garden(t_process *proc, int addr)
 {
-	return ((((proc->pc + addr) % MEM_SIZE) - proc->pc) % IDX_MOD);
+	// return (addr % IDX_MOD);
+	// (void)proc;
+	
+	// addr = addr % IDX_MOD;
+	// if (addr > (IDX_MOD / 2))
+	// 	addr = - (IDX_MOD - addr);
+	// return (addr);
+	// (void)proc;
+	
+
 	
 	// bouclage = rel_addr % MEM_SIZE;
 
@@ -48,6 +57,9 @@ int		vegetable_garden(t_process *proc, int addr) // Sensé renvoyer des adresses
 
 	// return (new_addr);
 	// return (modulo_mem_size(proc->pc + (addr % IDX_MOD)));
+
+	// NEW
+	return ((((proc->pc + addr) % MEM_SIZE) - proc->pc) % IDX_MOD);
 }
 
 void	param_dump(t_param params)
@@ -149,13 +161,15 @@ void		write_to_address(t_vm *vm, t_process *proc, int addr, int to_write)
 
 	bytes = 0;
 	to_write_uns = (unsigned int)to_write;
+	// to_write_uns = to_write;
+
 	// if (to_write < 0)
 	// 	to_write_uns = _MAX_UNS_INT_ + to_write + 1;
 	while (bytes < 4)
 	{
 		chunk = ft_power(256, (4 - (bytes + 1)));
 		vm->mem[(addr + bytes) % MEM_SIZE] = to_write_uns / chunk;
-		vm->owner[(addr + bytes) % MEM_SIZE] = proc->master;
+		vm->owner[(addr + bytes) % MEM_SIZE] = -proc->master;
 		to_write_uns = to_write_uns % chunk;
 		bytes++;
 	}

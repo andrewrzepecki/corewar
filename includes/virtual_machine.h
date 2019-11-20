@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 13:56:35 by anrzepec          #+#    #+#             */
-/*   Updated: 2019/11/20 14:19:24 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/20 20:39:16 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,8 @@ typedef	struct			s_vm
 	int					nb_players;
 	unsigned char		mem[MEM_SIZE];
 	unsigned char		owner[MEM_SIZE];
+	// char				mem[MEM_SIZE];
+	// char				owner[MEM_SIZE];
 	t_player			player[MAX_PLAYERS];
 	t_process     		*process;		// anciennement **process
 	t_player			*last_live; 	/* addresse du joueur ayant appelé 'live' en dernier */

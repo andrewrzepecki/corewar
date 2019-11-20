@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 12:46:35 by andrewrze         #+#    #+#             */
-/*   Updated: 2019/11/19 15:22:16 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/20 18:13:19 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void    create_arena(t_vm *vm)
     while (i < vm->nb_players)
     {
         ft_memcpy(vm->mem + (div * i), vm->player[i].exec, vm->player[i].size);
-        ft_memset(vm->owner + (div * i), vm->player[i].id, vm->player[i].size);
+        ft_memset(vm->owner + (div * i), -vm->player[i].id, vm->player[i].size);
 		vm->player[i].init_pc = div * i;
         i++;
     }

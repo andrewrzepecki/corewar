@@ -6,7 +6,7 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 22:56:27 by andrewrze         #+#    #+#             */
-/*   Updated: 2019/11/01 19:14:59 by eviana           ###   ########.fr       */
+/*   Updated: 2019/11/20 16:40:45 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int     parse_player(t_vm *vm, char **av, int i)
     if (parse_exec(fd, vm))
         return (EXEC_ERROR);
     vm->nb_players++;
-    vm->player[vm->nb_players - 1].id = vm->nb_option ? vm->nb_option : vm->nb_players;
+    vm->player[vm->nb_players - 1].id = vm->nb_option ? -vm->nb_option : -vm->nb_players;
     vm->nb_option = 0;
     return (check_player_numbers(vm, vm->nb_players));
 }
