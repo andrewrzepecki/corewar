@@ -49,6 +49,8 @@ int		op_ld(t_vm *vm, t_process *proc)
 	int		offset;
 
 	params = set_params(vm, proc, proc->pc, &offset); // en esperant que set_params marche bien quand il n'y a que 2 params
+	if (proc->pc == 563)
+		ft_printf("op position: %d|| test + 2: %d || is valid: %d || param 1: %d || param 2: %d || param 3: %d\n", proc->pc, vm->mem[proc->pc + 2],  params.valid, params.n[0], params.n[1], params.n[2]);
 	if (params.valid) // anciennement : if (is_valid_reg(params.n[1]))
 	{
 		if (params.c[0] == IND_CODE)

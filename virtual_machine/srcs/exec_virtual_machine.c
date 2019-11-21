@@ -18,6 +18,7 @@ void     cycle_review(t_vm *vm)
     {
         vm->cycles_to_die -= CYCLE_DELTA;
         vm->nb_checks = 0;
+        vm->cycles_to_die = vm->cycles_to_die < 1 ? 1 : vm->cycles_to_die;
     }
     vm->last_verif = vm->cycles;
     vm->lives_since_check = 0;

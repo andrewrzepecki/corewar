@@ -169,7 +169,7 @@ int     print_arena(t_vm *vm)
         i++;
     }
     ft_printf("{eoc}     |\n");
-    debug_lines(vm);
+    //debug_lines(vm);
     return (0);
 }
 
