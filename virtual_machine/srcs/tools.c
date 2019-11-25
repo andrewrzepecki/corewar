@@ -94,11 +94,10 @@ int			is_valid_reg(int reg)
 void        init_registers(t_process *process)
 {
     int i;
-	static int id = -1;
 
     i = 2;
 	process->reg[0] = 0; // par securité mais il n'y a rien a cette valeur
-    process->reg[1] = id--;
+    process->reg[1] = process->master;
     while (i < 17)
     {
         process->reg[i] = 0;
@@ -169,7 +168,7 @@ void		write_to_address(t_vm *vm, t_process *proc, int addr, int to_write)
 	{
 		chunk = ft_power(256, (4 - (bytes + 1)));
 		vm->mem[(addr + bytes) % MEM_SIZE] = to_write_uns / chunk;
-		vm->owner[(addr + bytes) % MEM_SIZE] = -proc->master;
+		vm->owner[(addr + bytes) % MEM_SIZE] = proc->master;
 		to_write_uns = to_write_uns % chunk;
 		bytes++;
 	}

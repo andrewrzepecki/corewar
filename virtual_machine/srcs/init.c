@@ -12,18 +12,35 @@
 
  #include "virtual_machine.h"
 
+int		get_master(t_vm *vm, int master)
+{
+	int i;
+
+	i = 0;
+	while (i < vm->nb_players)
+	{
+		if (vm->player[i].id == -master)
+			return (i);
+		i++;
+	}
+	return (0);
+}
+
 void    create_arena(t_vm *vm)
 {
-    int     i;
-    int     div;
+    int			i;
+    int			div;
+	t_process	*tracer;
 
     i = 0;
     div = MEM_SIZE / vm->nb_players;
-    while (i < vm->nb_players)
+	tracer = vm->process;
+    while (tracer)
     {
-        ft_memcpy(vm->mem + (div * i), vm->player[i].exec, vm->player[i].size);
-        ft_memset(vm->owner + (div * i), -vm->player[i].id, vm->player[i].size);
-		vm->player[i].init_pc = div * i;
+        ft_memcpy(vm->mem + (div * i), vm->player[get_master(vm, tracer->master)].exec, vm->player[get_master(vm, tracer->master)].size);
+        ft_memset(vm->owner + (div * i), -vm->player[get_master(vm, tracer->master)].id, vm->player[get_master(vm, tracer->master)].size);
+		vm->player[get_master(vm, tracer->master)].init_pc = div * i;
+		tracer = tracer->next;
         i++;
     }
 }
@@ -63,6 +80,7 @@ t_vm 	*init_vm(int ac)
 	vm->last_verif = 0; // NEW ! usefull ?
 	vm->lives_since_check = 0;
 	vm->nb_option = 0;
+	ft_bzero(vm->player_numbers, 4);
 	init_players(vm);
 	return (vm);
 }

@@ -47,8 +47,8 @@ int		main(int ac, char **av)
 		return (1);
 	if ((err = load_players(av, vm)))
 		return (init_error(err, vm));
-	create_arena(vm);
 	load_process_list(vm);
+	create_arena(vm);
 	vm->last_live = &vm->player[vm->nb_players - 1];
 	if (exec_machine(vm) == ALLOC_ERROR)
 		return (init_error(ALLOC_ERROR, vm));

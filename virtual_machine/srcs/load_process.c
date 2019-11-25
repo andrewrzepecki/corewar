@@ -18,7 +18,7 @@ t_process   *load_process_from_player(t_player player)
 
     if (!(process = (t_process*)malloc(sizeof(t_process))))
         return (NULL);
-    process->master = player.id;
+    process->master = -player.id;
     process->carry = 0;
     process->last_live = 0;
     process->current_op = player.exec[0];
@@ -40,6 +40,16 @@ void        place_process(t_process **lst, t_process *proc, int i)
     tracer = *lst;
     if (!*lst)
         *lst = proc;
+    else if (!tracer->next)
+    {
+        if (tracer->master < proc->master)
+        {
+            proc->next = *lst;
+            *lst = proc;
+        }
+        else
+            tracer->next = proc;
+    }
     else
     {
         while (tracer->next && tracer->next->master > proc->master)
@@ -47,6 +57,7 @@ void        place_process(t_process **lst, t_process *proc, int i)
         tmp = tracer->next;
         tracer->next = proc;
         proc->next = tmp;
+
     }
 }
 

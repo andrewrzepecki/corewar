@@ -119,6 +119,7 @@ typedef	struct			s_vm
 	int					nb_proc;
 	int					lives_since_check;
 	int					nb_option;
+	int					player_numbers[MAX_PLAYERS];
 }						t_vm;
 
 typedef struct    s_param
@@ -176,6 +177,7 @@ int		op_aff(t_vm *vm, t_process *proc);
 /*
 ** Tools
 */
+int     get_next_number(t_vm *vm);
 void	param_dump(t_param params);
 int		is_valid_op(int opcode);
 int		is_valid_reg(int reg);
