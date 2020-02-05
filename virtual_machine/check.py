@@ -3,10 +3,8 @@ import filecmp
 import difflib
 import subprocess
 
-champ1 = "../champs/Octobre_Rouge_V4.2.cor"
-champ2 = "../champs/Gagnant.cor"
-# champ1 = "champs/ldi.cor"
-# champ2 = "champs/ldi.cor"
+champ1 = "champs/helltrain.cor"
+champ2 = "champs/Bazou.cor"
 
 class ProgressBar:
     def __init__ (self, valmax, maxbar, title):
@@ -25,23 +23,23 @@ class ProgressBar:
         sys.stdout.write(out)
 
 def set_ouputs(cycle):
-    with open("tests/zaz.txt", 'w') as fzaz: # Pour output la version de zaz
-            subprocess.call([".././corewar", "-d", str(cycle), champ1, champ2], stdout=fzaz)
-    with open('tests/zaz.txt', 'r') as fin: # Pour retirer les lignes de declaration des champions
+    with open("dumps/zaz.txt", 'w') as fzaz: # Pour output la version de zaz
+            subprocess.call([".././corewar_zaz", "-d", str(cycle), champ1, champ2], stdout=fzaz)
+    with open('dumps/zaz.txt', 'r') as fin: # Pour retirer les lignes de declaration des champions
         data = fin.read().splitlines(True)
-    with open('tests/zaz.txt', 'w') as fout: # Pour retirer les lignes de declaration des champions
+    with open('dumps/zaz.txt', 'w') as fout: # Pour retirer les lignes de declaration des champions
         fout.writelines(data[3:])
 
-    with open("tests/nous.txt", 'w') as fnous: # Pour output notre version
-        subprocess.call(["./corewar", "-dump", str(cycle), champ1, champ2], stdout=fnous)
+    with open("dumps/nous.txt", 'w') as fnous: # Pour output notre version
+        subprocess.call([".././corewar", "-dump", str(cycle), champ1, champ2], stdout=fnous)
 
 def get_diff():
 
-    file1 = open("tests/zaz.txt", 'r')
-    file2 = open("tests/nous.txt", 'r')
+    file1 = open("dumps/zaz.txt", 'r')
+    file2 = open("dumps/nous.txt", 'r')
 
     filecmp.clear_cache()
-    if filecmp.cmp("tests/zaz.txt", "tests/nous.txt", False) == False:
+    if filecmp.cmp("dumps/zaz.txt", "dumps/nous.txt", False) == False:
         text1 = file1.readlines()
         text2 = file2.readlines()
         for line in difflib.unified_diff(text1, text2):

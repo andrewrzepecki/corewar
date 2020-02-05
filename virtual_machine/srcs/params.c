@@ -6,57 +6,15 @@
 /*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 18:33:09 by eviana            #+#    #+#             */
-/*   Updated: 2019/11/20 14:30:49 by eviana           ###   ########.fr       */
+/*   Updated: 2020/01/10 12:46:16 by eviana           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "virtual_machine.h"
 
-int			get_t_code(char ocp)
+int		get_param(t_vm *vm, t_process *proc, int pc, int code)
 {
-	if ((ocp & 1) && ((ocp >> 1) & 1))
-		return (T_IND);
-	else if ((ocp >> 1) & 1)
-		return (T_DIR);
-	else if (ocp & 1)
-		return (REG_CODE);
-	else
-		return (0);
-}
-
-int			check_ocp(t_process *proc, char ocp)
-{
-	int i;
-	int param;
-
-	i = 0;
-	if ((ocp & 1) || (ocp >> 1) & 1)
-		return (0);
-	while (i < g_op_tab[proc->current_op - 1].params)
-	{
-		param = ocp >> (6 - (2 * i));
-		if (!(get_t_code(param) & g_op_tab[proc->current_op - 1].type[i]))
-			return (0);
-		i++;	
-	}
-	return (1);
-}
-
-int			get_code(char ocp)
-{
-	if ((ocp & 1) && ((ocp >> 1) & 1))
-		return (IND_CODE);
-	else if ((ocp >> 1) & 1)
-		return (DIR_CODE);
-	else if (ocp & 1)
-		return (REG_CODE);
-	else
-		return (0);
-}
-
-int			get_param(t_vm *vm, t_process *proc, int pc, int code)
-{
-	int	dir_size;
+	int dir_size;
 
 	dir_size = (g_op_tab[proc->current_op - 1].dir_size ? 2 : 4);
 	if (code == REG_CODE)
@@ -71,14 +29,15 @@ int			get_param(t_vm *vm, t_process *proc, int pc, int code)
 	else if (code == IND_CODE)
 	{
 		if (g_op_tab[proc->current_op - 1].restr)
-			return (modulo_mem_size(proc->pc + vegetable_garden(proc, read_address(vm, pc, 2))));
+			return (modulo_mem_size(
+					proc->pc + idx_mod(read_address(vm, pc, 2))));
 		else
 			return ((proc->pc + read_address(vm, pc, 2)) % MEM_SIZE);
 	}
 	return (0);
 }
 
-int			param_size(int code, int dir_size)
+int		param_size(int code, int dir_size)
 {
 	if (code == REG_CODE)
 		return (1);
@@ -89,24 +48,23 @@ int			param_size(int code, int dir_size)
 	return (0);
 }
 
-t_param		set_params(t_vm *vm, t_process *proc, int pc, int *offset) // opti avec l'offset à voir
+t_param	set_params(t_vm *vm, t_process *proc, int pc, int *offset)
 {
-	int			i;
-	char		ocp;
-	t_param     params;
-	int			dir_size;
+	int		i;
+	char	ocp;
+	t_param	params;
+	int		dir_size;
 
 	i = 0;
 	ocp = vm->mem[(pc + 1) % MEM_SIZE];
 	pc = (pc + 2) % MEM_SIZE;
-	*offset = 2; // 1 + 1 : on passera l'opcode puis l'ocp
+	*offset = 2;
 	params.valid = 1;
-	if (!check_ocp(proc, ocp)) // ATTENTION : A VOIR
-		params.valid = 0; // Faire une action si nul : perror ?
+	if (!check_ocp(proc, ocp))
+		params.valid = 0;
 	dir_size = (g_op_tab[proc->current_op - 1].dir_size ? 2 : 4);
 	while (i < 3)
 	{
-		//ocp = ocp >> 2; // ocp >> (6 - (2 * i))
 		params.c[i] = get_code(ocp >> (6 - (2 * i)));
 		if ((params.n[i] = get_param(vm, proc, pc, params.c[i])) == -1)
 			params.valid = 0;

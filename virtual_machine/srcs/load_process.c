@@ -3,77 +3,87 @@
 /*                                                        :::      ::::::::   */
 /*   load_process.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eviana <eviana@student.42.fr>              +#+  +:+       +#+        */
+/*   By: anrzepec <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/19 16:37:07 by andrewrze         #+#    #+#             */
-/*   Updated: 2019/11/20 14:43:48 by eviana           ###   ########.fr       */
+/*   Created: 2020/01/08 14:08:26 by anrzepec          #+#    #+#             */
+/*   Updated: 2020/01/08 14:08:29 by anrzepec         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "virtual_machine.h"
 
-t_process   *load_process_from_player(t_player player)
+t_process		*load_process_from_player(t_player player)
 {
-    t_process *process;
+	t_process *process;
 
-    if (!(process = (t_process*)malloc(sizeof(t_process))))
-        return (NULL);
-    process->master = -player.id;
-    process->carry = 0;
-    process->last_live = 0;
-    process->current_op = player.exec[0];
-    process->cycles_left = g_op_tab[process->current_op - 1].cycles - 1;
-    process->pc = player.init_pc;
-    //process->next_op = get_next_op(process->id); // Je pense que ce n'est pas utile a ce stade
-    init_registers(process);
-    process->next = NULL;
-    //ft_bzero(process->reg + 4, (REG_NUMBER - 1) * 4); // Initialisation a 0 est faite dans set_registers
-    return (process);
+	if (!(process = (t_process *)malloc(sizeof(t_process))))
+		return (NULL);
+	process->master = player.id;
+	process->carry = 0;
+	process->last_live = 0;
+	process->current_op = player.exec[0];
+	process->cycles_left = g_op_tab[process->current_op - 1].cycles - 1;
+	init_registers(process);
+	process->next = NULL;
+	return (process);
 }
 
-void        place_process(t_process **lst, t_process *proc, int i)
+void			find_process_position(t_process **lst, t_process *proc)
 {
-    t_process *tmp;
-    t_process *tracer;
+	t_process	*tracer;
+	t_process	*tmp;
 
-    proc->id = i;
-    tracer = *lst;
-    if (!*lst)
-        *lst = proc;
-    else if (!tracer->next)
-    {
-        if (tracer->master < proc->master)
-        {
-            proc->next = *lst;
-            *lst = proc;
-        }
-        else
-            tracer->next = proc;
-    }
-    else
-    {
-        while (tracer->next && tracer->next->master > proc->master)
-            tracer = tracer->next;
-        tmp = tracer->next;
-        tracer->next = proc;
-        proc->next = tmp;
-
-    }
+	tracer = *lst;
+	tmp = NULL;
+	while (tracer && tracer->master > proc->master)
+	{
+		tmp = tracer;
+		tracer = tracer->next;
+	}
+	if (!tmp)
+	{
+		proc->next = *lst;
+		*lst = proc;
+	}
+	else
+	{
+		proc->next = tracer;
+		tmp->next = proc;
+	}
 }
 
-int        load_process_list(t_vm *vm)
+void			place_process(t_process **lst, t_process *proc, int i)
 {
-    int i;
-    t_process *proc;
+	proc->id = i;
+	if (!*lst)
+		*lst = proc;
+	else if (!(*lst)->next)
+	{
+		if ((*lst)->master < proc->master)
+		{
+			proc->next = *lst;
+			*lst = proc;
+		}
+		else
+			(*lst)->next = proc;
+	}
+	else
+		find_process_position(lst, proc);
+}
 
-    i = 0;
-    while (i < vm->nb_players)
-    {
-        if (!(proc = load_process_from_player(vm->player[i])))
-            return (ALLOC_ERROR);
-        place_process(&(vm->process), proc, i);
-        i++;
-    }
-    vm->nb_proc = vm->nb_players;
-    return (0);
+int				load_process_list(t_vm *vm)
+{
+	int			i;
+	t_process	*proc;
+
+	i = 0;
+	while (i < vm->nb_players)
+	{
+		if (!(proc = load_process_from_player(vm->player[i])))
+			return (ALLOC_ERROR);
+		place_process(&(vm->process), proc, i);
+		i++;
+	}
+	vm->nb_proc = vm->nb_players;
+	return (0);
 }

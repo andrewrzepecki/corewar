@@ -6,16 +6,16 @@
 #    By: eviana <eviana@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/08/21 15:01:58 by eviana            #+#    #+#              #
-#    Updated: 2019/11/13 16:49:06 by eviana           ###   ########.fr        #
+#    Updated: 2020/01/14 15:00:06 by mjouffro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME    	= corewar
+NAME    	= ../corewar
 DEBUG		= 0
 SRC_PATH	= srcs/
 OBJ_PATH	= objs/
-H_PATH		= ../includes/
-LIB			= ../libft/libft.a
+H_PATH		= includes/
+LIB			= libft/libft.a
 FLAGS		= -Wall -Werror -Wextra -g
 DEBUG_FLAG 	= -g3 -fsanitize=address
 
@@ -36,11 +36,18 @@ COMMON		= main \
 			process_review \
 			life_check \
 			print_machine \
+			print_pannel \
 			tools \
+			tools2 \
 			error \
 			op \
-			operations \
-			params 
+			operations1 \
+			operations2 \
+			operations3 \
+			operations4 \
+			params \
+			code_check \
+			debug
 INCLUDES	= virtual_machine \
 			op \
 			libft \
@@ -73,7 +80,7 @@ OK			= " $(CYAN)$(CHECK)$(WHITE)"
 all : $(NAME)
 
 $(NAME) : $(OBJ) $(HEADERS)
-	@make -s -C ../libft
+	@make -s -C libft
 	@printf "\r$(EOLCLR)[$(NAME)] >>>>>>>>>>\t$(YELLOW)$(BOLD)"\
 	"building corewar"$(OK)'\n'
 	@ $(CC) -I $(H_PATH) $(OBJ) $(LIB) -o $@
@@ -91,17 +98,17 @@ $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 	@printf '\t'$(OK)
 
 clean :
-	@make clean -C ../libft
+	@make clean -C libft
 	@printf "[$(NAME)] removing\t$(PINK)all obj files$(WHITE)"
 	@rm -rf $(OBJ_PATH)
 	@printf '\t'$(OK)'\n'
 
 fclean : clean
-	@make fclean -C ../libft
+	@make fclean -C libft
 	@printf "[$(NAME)] erasing\t$(PINK)$(NAME)$(WHITE)"
 	@rm -f $(NAME)
 	@rm -rf corewar.dSYM
-	@printf '\t\t'$(OK)'\n'
+	@printf '\t'$(OK)'\n'
 
 re : fclean all
 
