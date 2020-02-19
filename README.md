@@ -17,6 +17,11 @@ git clone https://github.com/andrewrzepecki/corewar && cd corewar && make
 ```
 ## ASM
 This part of the project consists of parsing and compiling the champions ('.s' extension required) into valid bytecode.
+
+**ASM champion example:**
+
+![corewar](png/champion.png)
+
 **Usage**
 ```
 ./asm [champion_to_compile.s] [-p]
