@@ -6,7 +6,7 @@ Fourth Algo Project @ 42 Paris.
 ![corewar](png/corewar_usage.png)
 
 Corewar is a two-part project which consists of running 'Champions' compiled into bytecode from a lightweight custom assembly code in a virtual machine: the virtual arena.
-The aim of the game is for the Champions to 'fight' in a restricted envoronement, the virtual arena, a circular area of memory. Each champions must execute 'LIVE' at least once per 'CYCLE_TO_DIE' to stay in the game, while trying to corrupt the other's bytecode.
+The aim of the game is for the Champions to 'fight' in a restricted environement, the virtual arena, a circular area of memory. Each champions must execute 'LIVE' at least once per 'CYCLE_TO_DIE' to stay in the game, while trying to corrupt the other's bytecode.
 A four man team was formed for this task, with two members working on the ASM (parsing and compiling pseudo assembly language into valid bytecode) and two on creating the virtual arena (an environement to run the bytecode champions in accordance with Corewar's rules). 
 
 ## Installation
