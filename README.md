@@ -2,8 +2,8 @@
 Fourth Algo Project @ 42 Paris.
 
 **Project score : [125 / 100]**
-![corewar](png/corewar_usage.png)
 
+![corewar](png/corewar_usage.png)
 
 Corewar is a two-part project which consists of running 'Champions' compiled into bytecode from a lightweight custom assembly code in a virtual machine: the virtual arena.
 The aim of the game is for the Champions to 'fight' in a restricted envoronement, the virtual arena, a circular area of memory. Each champions must execute 'LIVE' at least once per 'CYCLE_TO_DIE' to stay in the game, while trying to corrupt the other's bytecode.
